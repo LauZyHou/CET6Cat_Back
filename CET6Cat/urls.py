@@ -14,11 +14,14 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path
+from django.urls import path, include
 import UNIVERSAL.views
+# 每个APP里自己定义的urls.py文件都要导入到这里
+import USR_MSG.urls
 
 urlpatterns = [
     # path('admin/', admin.site.urls),
     path(r'index/', UNIVERSAL.views.index),
     path(r'gosub/', UNIVERSAL.views.gosub),
+    path(r'um/', include(USR_MSG.urls))
 ]

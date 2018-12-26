@@ -6,6 +6,50 @@
 这里旨在开发一个针对英语6级考试网络辅导的网站。具备CET6的最新信息发布，历年考题的网络模拟测试，学习交流论坛、慕课视频等板块。此外，还可有单独的“背单词敲卡”、“阅读分析”、“高分作文交流汇”等专栏。
 ## 主要界面展示
 开发中
+## 开发工具
+PyCharm,WebStorm,Postman,Navicat
+## 相关使用和配置
+### Vue.js
+#### 基本
+``` bash
+# install dependencies
+npm install
+
+# serve with hot reload at localhost:8080
+npm run dev
+
+# build for production with minification
+npm run build
+
+# build for production and view the bundle analyzer report
+npm run build --report
+```
+#### 插件
+``` bash
+npm i vue-resource -S
+```
+### ElementUI(for Vue.js)
+``` bash
+npm i element-ui -S
+```
+### Django
+``` bash
+# create app
+python manage.py startapp appnames
+
+# run
+python manage.py runserver
+
+# propagating changes you make to your models
+python manage.py makemigrations appname
+
+# to database
+python manage.py migrate appname
+```
 ## 开发日志
 ### 2018年12月20日
 搭建Django框架，开始本项目的开发。
+### 2018年12月26日
+添加Vue.js至FRONT/下，参考 [此篇](https://segmentfault.com/p/1210000010550731/read) 。
+
+添加ElementUI，参考 [此篇](https://www.jianshu.com/p/998cf125e9fc) 。
