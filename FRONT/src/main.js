@@ -11,7 +11,6 @@ import 'element-ui/lib/theme-chalk/index.css'
 
 Vue.config.productionTip = false;
 Vue.use(VueResource);
-//使用ElementUI,一定放要在Vue实例化的前面
 Vue.use(ElementUI);
 
 /* eslint-disable no-new */

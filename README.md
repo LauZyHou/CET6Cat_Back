@@ -27,6 +27,8 @@ npm run build --report
 #### 插件
 ``` bash
 npm i vue-resource -S
+
+npm i vue-router -S
 ```
 ### ElementUI(for Vue.js)
 ``` bash

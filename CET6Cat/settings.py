@@ -37,6 +37,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'UNIVERSAL',
     'USR_MSG',
+    'US',
 ]
 
 MIDDLEWARE = [
