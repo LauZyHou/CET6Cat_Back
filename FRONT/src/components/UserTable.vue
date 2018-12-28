@@ -31,7 +31,7 @@
     },
     methods: {
       addUser() {
-        this.$http.get('http://localhost:8000/um/add_user?user_name=' + this.input)
+        this.$http.get('/api/tst/add_user?user_name=' + this.input)
           .then((response) => {
             let res = JSON.parse(response.bodyText);
             if (res.error_num === 0) {
@@ -43,7 +43,7 @@
           })
       },
       getUsers() {
-        this.$http.get('http://127.0.0.1:8000/um/get_users')
+        this.$http.get('/api/tst/get_users')
           .then((response) => {
             let res = JSON.parse(response.bodyText);
             console.log(res);

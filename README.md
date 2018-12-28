@@ -48,10 +48,13 @@ python manage.py makemigrations appname
 # to database
 python manage.py migrate appname
 ```
-## 开发日志
-### 2018年12月20日
-搭建Django框架，开始本项目的开发。
-### 2018年12月26日
-添加Vue.js至FRONT/下，参考 [此篇](https://segmentfault.com/p/1210000010550731/read) 。
+### 其它
+#### Axios
+```bash
+npm i axios -S
+```
+## 相关资料
+添加Vue.js至"FRONT/"，参考 [这篇](https://segmentfault.com/p/1210000010550731/read) 。
 
-添加ElementUI，参考 [此篇](https://www.jianshu.com/p/998cf125e9fc) 。
+添加ElementUI，参考 [这篇](https://www.jianshu.com/p/998cf125e9fc) 。
+

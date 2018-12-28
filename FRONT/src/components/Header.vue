@@ -33,8 +33,9 @@
         @select="handleSelect"
         background-color="#545c64"
         text-color="#fff"
-        active-text-color="#ffd04b">
-        <el-menu-item index="1">主页</el-menu-item>
+        active-text-color="#ffd04b"
+        router="true">
+        <el-menu-item index="/">主页</el-menu-item>
         <el-submenu index="2">
           <template slot="title">最新信息</template>
           <el-menu-item index="2-1">选项1</el-menu-item>
@@ -50,7 +51,7 @@
         <el-menu-item index="3" disabled>在线模拟</el-menu-item>
         <el-menu-item index="4">慕课视频</el-menu-item>
         <el-menu-item index="5">交流论坛</el-menu-item>
-        <el-menu-item index="6">背单词打卡</el-menu-item>
+        <el-menu-item index="/word">背单词打卡</el-menu-item>
         <el-menu-item index="7">阅读分析</el-menu-item>
         <el-menu-item index="8">高分作文交流汇</el-menu-item>
       </el-menu>
@@ -89,6 +90,14 @@
     opacity: 100;
   }
 
+  /*竖线*/
+  .space {
+    padding: 0 8px;
+    color: #959595;
+  }
+
+  /*-----------------------------------------------------------*/
+
   .top-show {
     z-index: 4;
     margin-top: 17px;
@@ -104,10 +113,12 @@
     position: relative;
   }
 
-  /*竖线*/
-  .space {
-    padding: 0 8px;
-    color: #959595;
+  .top-search {
+    flex: 7;
+  }
+
+  .el-select .el-input {
+    width: 130px;
   }
 
   .logo {
@@ -128,11 +139,7 @@
     max-height: 100%;
   }
 
-  .top-search {
-    flex: 7;
-  }
+  /*-----------------------------------------------------------*/
 
-  .el-select .el-input {
-    width: 130px;
-  }
+
 </style>

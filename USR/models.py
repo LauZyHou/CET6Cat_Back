@@ -5,7 +5,6 @@ from django.db import models
 
 class User(models.Model):
     """用户"""
-    id = models.AutoField()
     name = models.CharField(max_length=20)
     pwd = models.CharField(max_length=20)
     email = models.EmailField()

@@ -15,13 +15,10 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
-import UNIVERSAL.views
 # 每个APP里自己定义的urls.py文件都要导入到这里
-import USR_MSG.urls
+import TST.urls
 
 urlpatterns = [
     # path('admin/', admin.site.urls),
-    path(r'index/', UNIVERSAL.views.index),
-    path(r'gosub/', UNIVERSAL.views.gosub),
-    path(r'um/', include(USR_MSG.urls))
+    path(r'tst/', include(TST.urls))
 ]
