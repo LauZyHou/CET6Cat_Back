@@ -1,5 +1,5 @@
 # CET6Cat
-英语六级考前强化辅导网，CET6Cat大学英语六级考前强化辅导网，Django2+Vue.js+ElementUI+MySQL，本科毕业设计。
+CET6Cat大学英语六级考前强化辅导网，Django2+Vue.js+ElementUI+MySQL，本科毕业设计。
 ## 需求描述
 英语6级考试已几乎成为国内“211”大学大多数学生必考选项之一，对于今后继续深造或就业都会带来非常重要的作用，其好处是不言而喻。
 <br><br>

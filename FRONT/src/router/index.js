@@ -2,6 +2,8 @@ import Vue from 'vue'
 import Router from 'vue-router'
 import Home from '../components/Home'
 import Word from '../components/word/Word'
+import SignIn from '../components/sign/SignIn'
+import SignUp from '../components/sign/SignUp'
 
 Vue.use(Router);
 
@@ -18,5 +20,15 @@ export default new Router({
       name: 'Word',
       component: Word
     },
+    {
+      path: '/sign-in',
+      name: 'SignIn',
+      component: SignIn
+    },
+    {
+      path: '/sign-up',
+      name: 'SignUp',
+      component: SignUp
+    }
   ]
 });

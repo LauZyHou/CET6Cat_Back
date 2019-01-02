@@ -3,9 +3,9 @@
     <div class="top-bar">
       <span>你好,欢迎来到CET6Cat</span>
       <span class="space">|</span>
-      <router-link rel="nofollow" to="#">注册</router-link>
+      <router-link rel="nofollow" to="/sign-up">注册</router-link>
       <span class="space">|</span>
-      <router-link rel="nofollow" to="#">登录</router-link>
+      <router-link rel="nofollow" to="/sign-in">登录</router-link>
     </div>
     <!------------------------------------------------------------->
     <div class="top-show">
