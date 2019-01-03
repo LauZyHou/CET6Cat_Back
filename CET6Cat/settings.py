@@ -11,9 +11,11 @@ https://docs.djangoproject.com/en/2.1/ref/settings/
 """
 
 import os
+import datetime
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+# 可以将所有app移动到子目录里去,然后在这里配置一下
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/2.1/howto/deployment/checklist/
@@ -37,6 +39,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'TST',
     'USR',
+    'rest_framework',
+    'rest_framework.authtoken',  # 设置token
 ]
 
 MIDDLEWARE = [
@@ -87,6 +91,8 @@ DATABASES = {
         'PASSWORD': '3838438',
         'HOST': 'localhost',
         'PORT': '3306',
+        # 第三方登录的库要求使用innodb,否则会migration出错?
+        "OPTIONS": {"init_command": "SET default_storage_engine=INNODB;"}
     }
 }
 
@@ -132,3 +138,24 @@ STATICFILES_DIRS = (
     # 指出要引用的资源所在目录名字.(这个就是实际目录名,和引用指针名无关)
     os.path.join(BASE_DIR, 'static'),
 )
+
+# ---------------------------------------------------------------------
+
+# 添加AUTH_USRE_MODEL 替换默认的user
+AUTH_USER_MODEL = 'TST.User'
+
+from rest_framework.authentication import TokenAuthentication, BasicAuthentication, SessionAuthentication
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        # 在前面的认证方案优先
+        'rest_framework_jwt.authentication.JSONWebTokenAuthentication',  # JWT认证
+        'rest_framework.authentication.SessionAuthentication',
+        'rest_framework.authentication.BasicAuthentication',
+    ),
+}
+
+JWT_AUTH = {
+    # JWT_EXPIRATION_DELTA 指明token的有效期
+    'JWT_EXPIRATION_DELTA': datetime.timedelta(days=1),
+}

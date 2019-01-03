@@ -16,3 +16,4 @@ yarn-error.log*
 *.sln
 
 # 自定
+migrations/

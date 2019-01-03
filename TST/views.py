@@ -52,3 +52,17 @@ def get_users(request):
         response['msg'] = str(e)
         response['error_num'] = 1
     return JsonResponse(response)
+
+
+@require_http_methods(['GET', 'POST'])
+def validate(request):
+    """验证用户"""
+    response = {}
+    if request.method == 'GET':
+        user_name = request.GET.get('user_name')
+        password = request.GET.get('password')
+    else:
+        user_name = request.POST.get('user_name')
+        password = request.POST.get('password')
+    print(user_name, password)
+    return response

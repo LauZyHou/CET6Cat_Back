@@ -53,6 +53,12 @@ python manage.py migrate appname
 ```bash
 npm i axios -S
 ```
+#### Django相关
+```bash
+pip install djangorestframework
+
+pip install django-filter
+```
 ## 相关资料
 添加Vue.js至"FRONT/"，参考 [这篇](https://segmentfault.com/p/1210000010550731/read) 。
 
