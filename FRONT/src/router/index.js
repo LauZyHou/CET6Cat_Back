@@ -5,6 +5,7 @@ import Word from '../components/word/Word'
 import SignIn from '../components/sign/SignIn'
 import SignUp from '../components/sign/SignUp'
 import TRoutes from './test'
+import Comm from '../components/communicate/Comm'
 
 Vue.use(Router);
 
@@ -28,6 +29,10 @@ export default new Router({
       path: '/sign-up',
       name: 'SignUp',
       component: SignUp
+    }, {
+      path: '/comm',
+      name: 'Comm',
+      component: Comm
     }
   ]
 });

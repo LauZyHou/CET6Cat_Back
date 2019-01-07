@@ -50,7 +50,7 @@
         </el-submenu>
         <el-menu-item index="3" disabled>在线模拟</el-menu-item>
         <el-menu-item index="4">慕课视频</el-menu-item>
-        <el-menu-item index="5">交流论坛</el-menu-item>
+        <el-menu-item index="/comm">交流论坛</el-menu-item>
         <el-menu-item index="/word">背单词打卡</el-menu-item>
         <el-menu-item index="7">阅读分析</el-menu-item>
         <el-menu-item index="8">高分作文交流汇</el-menu-item>
