@@ -34,4 +34,8 @@
   #comm-main{
     margin-right: 10px;
   }
+
+  .module-box {
+    background-color: lavender;
+  }
 </style>
