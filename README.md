@@ -57,6 +57,8 @@ npm i axios -S
 ```bash
 pip install djangorestframework
 
+pip install djangorestframework-jwt
+
 pip install django-filter
 ```
 ## 相关资料

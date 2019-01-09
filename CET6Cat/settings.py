@@ -142,7 +142,8 @@ STATICFILES_DIRS = (
 # ---------------------------------------------------------------------
 
 # 添加AUTH_USRE_MODEL 替换默认的user
-AUTH_USER_MODEL = 'TST.User'
+# AUTH_USER_MODEL = 'TST.User'
+
 
 from rest_framework.authentication import TokenAuthentication, BasicAuthentication, SessionAuthentication
 
@@ -155,7 +156,20 @@ REST_FRAMEWORK = {
     ),
 }
 
+'''
 JWT_AUTH = {
     # JWT_EXPIRATION_DELTA 指明token的有效期
     'JWT_EXPIRATION_DELTA': datetime.timedelta(days=1),
+    'JWT_AUTH_HEADER_PREFIX': 'JWT',
 }
+'''
+
+JWT_AUTH = {
+    """设置处理时使用的函数，就是上一步我们自己定义的那一个"""
+    'JWT_RESPONSE_PAYLOAD_HANDLER': 'TST.utils.jwt_response_payload_handler',
+}
+
+# 我们改写之后，还需要告诉Django，现在需要使用我们自定义的认证方法
+AUTHENTICATION_BACKENDS = [
+    'TST.utils.UsernameMobileAuthBackend',
+]

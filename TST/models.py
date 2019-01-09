@@ -1,21 +1,19 @@
+from django.contrib.auth.base_user import AbstractBaseUser
 from django.db import models
 from django.contrib.auth.models import AbstractUser
+from django.db import models
 
 """
 仅供测试用!
 """
 
 
-class User(AbstractUser):
+class User(AbstractBaseUser):
     """用户信息"""
-    # user_name = models.CharField(max_length=32, default="Flora")
-    # password = models.CharField(max_length=32)
-    # REQUIRED_FIELDS = ['user_name']
+    username = models.CharField(max_length=20)
+    # password = models.CharField(max_length=20)
+    mobile = models.CharField(max_length=20)
 
-    # 元数据
-    class Meta:
-        verbose_name = "用户"
-        verbose_name_plural = verbose_name
-
-    def __str__(self):
-        return self.username
+    def check_password(self):
+        # return self.password == '111111'
+        return True
