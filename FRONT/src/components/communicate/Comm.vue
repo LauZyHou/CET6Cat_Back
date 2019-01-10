@@ -31,11 +31,33 @@
 </style>
 
 <style>
-  #comm-main{
+  #comm-main {
     margin-right: 10px;
   }
 
   .module-box {
-    background-color: lavender;
+    background-color: white;
+    border: 1px solid #e0e0e0;
+    border-radius: 3px;
+  }
+
+  .module-head{
+    padding: 15px 15px 0;
+  }
+
+  body {
+    /*FIXME 调整font字体*/
+  }
+
+  /*小红点*/
+  .module-head h3::before{
+    background: #ff6547;
+    content: "";
+    display: inline-block;
+    width: 7px;
+    height: 7px;
+    margin-right: 5px;
+    margin-bottom: 2px;
+    vertical-align: middle;
   }
 </style>

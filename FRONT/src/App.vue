@@ -51,4 +51,17 @@
     text-decoration: none;
     color: dodgerblue;
   }
+
+  /*清除浮动*/
+  .clearfix::after, .clearfix::before {
+    clear: both;
+    content: ".";
+    display: block;
+    height: 0;
+    visibility: hidden;
+  }
+
+  ol,ul{
+    list-style: none;
+  }
 </style>
