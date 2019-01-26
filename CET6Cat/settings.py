@@ -11,11 +11,17 @@ https://docs.djangoproject.com/en/2.1/ref/settings/
 """
 
 import os
+import sys
 import datetime
+from rest_framework.authentication import TokenAuthentication, BasicAuthentication, SessionAuthentication
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-# 可以将所有app移动到子目录里去,然后在这里配置一下
+
+# 设置搜索app的路径
+sys.path.insert(0, BASE_DIR)
+sys.path.insert(0, os.path.join(BASE_DIR, "apps"))
+sys.path.insert(0, os.path.join(BASE_DIR, "extra_apps"))
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/2.1/howto/deployment/checklist/
@@ -37,6 +43,13 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'rest_framework',
+    'rest_framework_jwt',
+    'django_filters',
+    'crispy_forms',
+    'corsheaders',
+    'reversion',
+    'xadmin',
     'TST',
     'USR',
     'rest_framework',
@@ -46,16 +59,18 @@ INSTALLED_APPS = [
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    # CORS跨域
     'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
-    # 关闭Django跨站请求保护机制
-    # 'django.middleware.csrf.CsrfViewMiddleware',
+    # Django跨站请求保护
+    'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-# CORS_ORIGIN_ALLOW_ALL = True
+# 允许随意跨域
+CORS_ORIGIN_ALLOW_ALL = True
 
 ROOT_URLCONF = 'CET6Cat.urls'
 
@@ -117,15 +132,18 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/2.1/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+# 语言改为中文
+LANGUAGE_CODE = 'zh-hans'
 
-TIME_ZONE = 'UTC'
+# 时区改为上海
+TIME_ZONE = 'Asia/Shanghai'
 
 USE_I18N = True
 
 USE_L10N = True
 
-USE_TZ = True
+# 数据库存储使用时间，True时间会被存为UTC的时间
+USE_TZ = False
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.1/howto/static-files/
@@ -139,37 +157,41 @@ STATICFILES_DIRS = (
     os.path.join(BASE_DIR, 'static'),
 )
 
+STATIC_ROOT = os.path.join(BASE_DIR, 'collect_static')
+
 # ---------------------------------------------------------------------
 
 # 添加AUTH_USRE_MODEL 替换默认的user
 # AUTH_USER_MODEL = 'TST.User'
 
+# 设置图片访问的路径
+MEDIA_URL = "/media/"
+MEDIA_ROOT = os.path.join(BASE_DIR, "media")
 
-from rest_framework.authentication import TokenAuthentication, BasicAuthentication, SessionAuthentication
-
+# 所有与drf相关的设置写在这里面,其中的key可以到rest_framework模块下的setting里去找
 REST_FRAMEWORK = {
+    # 分页.注意设置分页后JSON的格式就变了
+    # 'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
+    # 'PAGE_SIZE': 10,
     'DEFAULT_AUTHENTICATION_CLASSES': (
-        # 在前面的认证方案优先
-        'rest_framework_jwt.authentication.JSONWebTokenAuthentication',  # JWT认证
-        'rest_framework.authentication.SessionAuthentication',
         'rest_framework.authentication.BasicAuthentication',
-    ),
+        'rest_framework.authentication.SessionAuthentication',
+        # 如果前端带错误的(如过期的)Token,那么在访问公共页面时还是会出认证错误
+        # 所以不在这里配置全局的Token认证,而是改到views里配置
+        # 'rest_framework.authentication.TokenAuthentication',
+        # 'rest_framework_jwt.authentication.JSONWebTokenAuthentication',  # 改用JWT
+        # JWT也和普通的Token一样,还是配置到具体要做验证的view里面去
+    )
 }
 
-'''
+import datetime
+
 JWT_AUTH = {
-    # JWT_EXPIRATION_DELTA 指明token的有效期
-    'JWT_EXPIRATION_DELTA': datetime.timedelta(days=1),
-    'JWT_AUTH_HEADER_PREFIX': 'JWT',
-}
-'''
-
-JWT_AUTH = {
-    """设置处理时使用的函数，就是上一步我们自己定义的那一个"""
-    'JWT_RESPONSE_PAYLOAD_HANDLER': 'TST.utils.jwt_response_payload_handler',
+    # 设置过期时间为7天
+    'JWT_EXPIRATION_DELTA': datetime.timedelta(days=7),
+    # 请求时候HTTP头的Token前面的字符串,默认就是JWT.这里改掉让前端不知道服务器用的JWT
+    'JWT_AUTH_HEADER_PREFIX': 'Bearer',
 }
 
-# 我们改写之后，还需要告诉Django，现在需要使用我们自定义的认证方法
-AUTHENTICATION_BACKENDS = [
-    'TST.utils.UsernameMobileAuthBackend',
-]
+# 手机号码正则表达式
+REGEX_MOBILE = "^1[358]\d{9}$|^147\d{8}$|^176\d{8}$"
