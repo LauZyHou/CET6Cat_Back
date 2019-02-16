@@ -16,6 +16,7 @@ import datetime
 from rest_framework.authentication import TokenAuthentication, BasicAuthentication, SessionAuthentication
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
+# -----------------------------------------------------------------------------------------
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 # 设置搜索app的路径
@@ -25,6 +26,7 @@ sys.path.insert(0, os.path.join(BASE_DIR, "extra_apps"))
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/2.1/howto/deployment/checklist/
+# -----------------------------------------------------------------------------------------
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = '1llg(zkqrhys*((f75uyj5em=!%1poow9t_q3_1g(dca$khi)n'
@@ -35,6 +37,7 @@ DEBUG = True
 ALLOWED_HOSTS = []
 
 # Application definition
+# -----------------------------------------------------------------------------------------
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -45,15 +48,13 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     'rest_framework_jwt',
-    'django_filters',
+    'rest_framework.authtoken',  # 设置token
     'crispy_forms',
+    'django_filters',
     'corsheaders',
     'reversion',
-    'xadmin',
-    'TST',
-    'USR',
-    'rest_framework',
-    'rest_framework.authtoken',  # 设置token
+    # 'xadmin',
+    'goods',
 ]
 
 MIDDLEWARE = [
@@ -94,12 +95,11 @@ WSGI_APPLICATION = 'CET6Cat.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/2.1/ref/settings/#databases
+# -----------------------------------------------------------------------------------------
 
+# 将默认的SQLite3数据库换成MySQL数据库
 DATABASES = {
     'default': {
-        # 'ENGINE': 'django.db.backends.sqlite3',
-        # 'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
-        # 将默认的SQLite3数据库换成MySQL数据库
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'cet6cat',
         'USER': 'root',
@@ -113,6 +113,7 @@ DATABASES = {
 
 # Password validation
 # https://docs.djangoproject.com/en/2.1/ref/settings/#auth-password-validators
+# -----------------------------------------------------------------------------------------
 
 AUTH_PASSWORD_VALIDATORS = [
     {
@@ -131,6 +132,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 # Internationalization
 # https://docs.djangoproject.com/en/2.1/topics/i18n/
+# -----------------------------------------------------------------------------------------
 
 # 语言改为中文
 LANGUAGE_CODE = 'zh-hans'
@@ -147,6 +149,7 @@ USE_TZ = False
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.1/howto/static-files/
+# -----------------------------------------------------------------------------------------
 
 # 引用指针,在HTML文件中需要和这里对应.(这个名字和实际目录名无关)
 STATIC_URL = '/static/'
@@ -157,16 +160,21 @@ STATICFILES_DIRS = (
     os.path.join(BASE_DIR, 'static'),
 )
 
+# -----------------------------------------------------------------------------------------
+
+# collectstatic收集到的目录
 STATIC_ROOT = os.path.join(BASE_DIR, 'collect_static')
 
-# ---------------------------------------------------------------------
-
-# 添加AUTH_USRE_MODEL 替换默认的user
-# AUTH_USER_MODEL = 'TST.User'
+# -----------------------------------------------------------------------------------------
 
 # 设置图片访问的路径
 MEDIA_URL = "/media/"
 MEDIA_ROOT = os.path.join(BASE_DIR, "media")
+
+# -----------------------------------------------------------------------------------------
+
+# 添加AUTH_USRE_MODEL 替换默认的user
+# AUTH_USER_MODEL = 'TST.User'
 
 # 所有与drf相关的设置写在这里面,其中的key可以到rest_framework模块下的setting里去找
 REST_FRAMEWORK = {

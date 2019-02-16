@@ -15,13 +15,13 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
+from goods.views_base import GoodsListView
 # 每个APP里自己定义的urls.py文件都要导入到这里
-import TST.urls
+# import TST.urls
 # 获取JWT的token用
 from rest_framework_jwt.views import obtain_jwt_token
 
 urlpatterns = [
     # path('admin/', admin.site.urls),
-    path(r'tst/', include(TST.urls)),
-    path(r'tk/', obtain_jwt_token),
+    path('goods/', GoodsListView.as_view(), name="goods-list")
 ]
