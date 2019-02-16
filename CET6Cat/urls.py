@@ -14,14 +14,23 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path, include
-from goods.views_base import GoodsListView
-# 每个APP里自己定义的urls.py文件都要导入到这里
-# import TST.urls
-# 获取JWT的token用
+from django.views.static import serve
+from django.urls import path, re_path, include
 from rest_framework_jwt.views import obtain_jwt_token
 
+import xadmin
+from xadmin.plugins import xversion
+
+from CET6Cat.settings import MEDIA_ROOT
+from goods.views_base import GoodsListView
+
+# XAdmin:model自动注册
+xadmin.autodiscover()
+xversion.register_models()
+
 urlpatterns = [
-    # path('admin/', admin.site.urls),
-    path('goods/', GoodsListView.as_view(), name="goods-list")
+    path('xadmin/', xadmin.site.urls),
+    path('goods/', GoodsListView.as_view(), name="goods-list"),
+    # 处理图片显示的url,使用Django自带serve,传入参数告诉它去哪个路径找,使用配置好的路径
+    re_path('media/(?P<path>.*)', serve, {"document_root": MEDIA_ROOT}),
 ]

@@ -18,7 +18,6 @@ from rest_framework.authentication import TokenAuthentication, BasicAuthenticati
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 # -----------------------------------------------------------------------------------------
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-
 # 设置搜索app的路径
 sys.path.insert(0, BASE_DIR)
 sys.path.insert(0, os.path.join(BASE_DIR, "apps"))
@@ -36,9 +35,8 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
-# Application definition
+# 项目使用的Application
 # -----------------------------------------------------------------------------------------
-
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -53,10 +51,14 @@ INSTALLED_APPS = [
     'django_filters',
     'corsheaders',
     'reversion',
-    # 'xadmin',
+    'xadmin',
     'goods',
+    # 'users.apps.UsersConfig',
+    'users',
 ]
 
+# 项目使用的中间件
+# -----------------------------------------------------------------------------------------
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -96,7 +98,6 @@ WSGI_APPLICATION = 'CET6Cat.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/2.1/ref/settings/#databases
 # -----------------------------------------------------------------------------------------
-
 # 将默认的SQLite3数据库换成MySQL数据库
 DATABASES = {
     'default': {
@@ -114,7 +115,6 @@ DATABASES = {
 # Password validation
 # https://docs.djangoproject.com/en/2.1/ref/settings/#auth-password-validators
 # -----------------------------------------------------------------------------------------
-
 AUTH_PASSWORD_VALIDATORS = [
     {
         'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
@@ -134,49 +134,42 @@ AUTH_PASSWORD_VALIDATORS = [
 # https://docs.djangoproject.com/en/2.1/topics/i18n/
 # -----------------------------------------------------------------------------------------
 
-# 语言改为中文
-LANGUAGE_CODE = 'zh-hans'
+LANGUAGE_CODE = 'zh-hans'  # 语言改为中文
 
-# 时区改为上海
-TIME_ZONE = 'Asia/Shanghai'
+TIME_ZONE = 'Asia/Shanghai'  # 时区改为上海
 
 USE_I18N = True
 
 USE_L10N = True
 
-# 数据库存储使用时间，True时间会被存为UTC的时间
-USE_TZ = False
+USE_TZ = False  # 数据库存储使用时间,True时间会被存为UTC的时间
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.1/howto/static-files/
 # -----------------------------------------------------------------------------------------
-
 # 引用指针,在HTML文件中需要和这里对应.(这个名字和实际目录名无关)
 STATIC_URL = '/static/'
-
 # 建立一个全局变量元组,保存要引用的路径位置
 STATICFILES_DIRS = (
     # 指出要引用的资源所在目录名字.(这个就是实际目录名,和引用指针名无关)
     os.path.join(BASE_DIR, 'static'),
 )
 
-# -----------------------------------------------------------------------------------------
-
 # collectstatic收集到的目录
+# -----------------------------------------------------------------------------------------
 STATIC_ROOT = os.path.join(BASE_DIR, 'collect_static')
 
-# -----------------------------------------------------------------------------------------
-
 # 设置图片访问的路径
+# -----------------------------------------------------------------------------------------
 MEDIA_URL = "/media/"
 MEDIA_ROOT = os.path.join(BASE_DIR, "media")
 
-# -----------------------------------------------------------------------------------------
-
 # 添加AUTH_USRE_MODEL 替换默认的user
-# AUTH_USER_MODEL = 'TST.User'
+# -----------------------------------------------------------------------------------------
+AUTH_USER_MODEL = 'users.UserProfile'
 
 # 所有与drf相关的设置写在这里面,其中的key可以到rest_framework模块下的setting里去找
+# -----------------------------------------------------------------------------------------
 REST_FRAMEWORK = {
     # 分页.注意设置分页后JSON的格式就变了
     # 'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
