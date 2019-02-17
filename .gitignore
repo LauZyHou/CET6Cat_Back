@@ -109,18 +109,22 @@ venv.bak/
 
 # 不保留migrations文件,项目拉取下来需重新生成
 **/migrations/*
-!__init__.py
 
 # 隐私信息文件,见相应的_tmp模板
 privacy.py
 
-# collect的静态资源
+# 静态资源
+static/*
 collect_static/*
 
-# 部分图片资源
+# 工具包
+utils/*
+
+# 媒体资源
 media/user_head/*
 media/video_thumb/*
 media/videos/*
 
 # 保留含占位文件的目录
 !.gitkeep
+!__init__.py
