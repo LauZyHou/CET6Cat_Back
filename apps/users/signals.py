@@ -4,8 +4,9 @@
 各种信号量见:
 https://www.cnblogs.com/renpingsheng/p/7566647.html
 """
+import os
 from django.conf import settings
-from django.db.models.signals import post_save
+from django.db.models.signals import post_save, pre_delete
 from django.dispatch import receiver
 from rest_framework.authtoken.models import Token
 
@@ -24,3 +25,17 @@ def create_user_password(sender, instance=None, created=False, **kwargs):
         password = instance.password
         instance.set_password(password)
         instance.save()  # 注意这个save又会触发post_save,但已经不满足created==True了
+
+
+@receiver(pre_delete, sender=User)
+def delete_user_head(sender, instance=None, created=False, **kwargs):
+    """User对象删除时触发"""
+    img = getattr(instance, 'head_img', '')  # <class 'django.db.models.fields.files.ImageFieldFile'>
+    if not img:
+        return
+    img.delete(save=False)  # 删除头像,save=False表示不将改动更新到Model实例
+
+    # 如果得到一个文件路径files:要这样删除
+    # fname = os.path.join(settings.MEDIA_ROOT, files)
+    # if os.path.isfile(fname):
+    #     os.remove(fname)
