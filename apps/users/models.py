@@ -5,10 +5,10 @@ from django.db import models
 
 
 class UserProfile(AbstractUser):
-    """用户,由手机号标识"""
+    """用户(由手机号标识)"""
     GENDER_CHOICES = (
-        (True, u"男"),
-        (False, u"女")
+        (True, "男"),
+        (False, "女")
     )
     # 用户注册时用的是mobile,没提供name之类的信息,所以可以为null
     # 注意null针对数据库,blank针对表单
@@ -42,7 +42,7 @@ class UserProfile(AbstractUser):
 
 class VerifyCode(models.Model):
     """
-    验证码,由手机号关联,回填验证码进行验证(可以考虑保存在redis中)
+    验证码(由手机号关联,回填验证码进行验证,可以考虑保存在redis中)
     """
     code = models.CharField(max_length=10, verbose_name="验证码")
     mobile = models.CharField(max_length=11, verbose_name="电话")

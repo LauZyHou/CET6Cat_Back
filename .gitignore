@@ -115,7 +115,12 @@ venv.bak/
 privacy.py
 
 # collect的静态资源
-collect_static/
+collect_static/*
 
 # 部分图片资源
 media/user_head/*
+media/video_thumb/*
+media/videos/*
+
+# 保留含占位文件的目录
+!.gitkeep

@@ -53,8 +53,9 @@ INSTALLED_APPS = [
     'reversion',
     'xadmin',
     'goods',
-    # 'users.apps.UsersConfig',
-    'users',
+    'users.apps.UsersConfig',
+    # 'users',
+    'videos.apps.VideosConfig',
 ]
 
 # 项目使用的中间件

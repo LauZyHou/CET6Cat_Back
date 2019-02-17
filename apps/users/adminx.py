@@ -17,6 +17,7 @@ class GlobalSettings(object):
 # 这个配置类让VerifyCode这个Model也受XAdmin管理
 # 注意,因为UserProfile已经作为系统的默认User类,所以不用像这样配置
 class VerifyCodeAdmin(object):
+    """验证码"""
     list_display = ['code', 'mobile', "add_time"]
 
 
