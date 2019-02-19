@@ -1,5 +1,6 @@
 import xadmin
 from xadmin import views
+
 from videos.models import Video
 
 

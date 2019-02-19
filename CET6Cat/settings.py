@@ -57,6 +57,7 @@ INSTALLED_APPS = [
     # 'users',
     'videos.apps.VideosConfig',
     'posts.apps.PostsConfig',
+    'readings.apps.ReadingsConfig',
 ]
 
 # 项目使用的中间件
