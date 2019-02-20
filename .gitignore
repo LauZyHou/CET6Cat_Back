@@ -120,11 +120,12 @@ collect_static/*
 # 工具包
 utils/*
 
-# 媒体资源
+# 媒体资源,静态文件
 media/user_head/*
 media/video_thumb/*
 media/videos/*
 media/readings/*
+media/essays/*
 
 # 保留含占位文件的目录
 !.gitkeep
