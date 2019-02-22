@@ -17,20 +17,27 @@ from django.contrib import admin
 from django.views.static import serve
 from django.urls import path, re_path, include
 from rest_framework_jwt.views import obtain_jwt_token
+from rest_framework.routers import DefaultRouter
 
 import xadmin
 from xadmin.plugins import xversion
 
 from CET6Cat.settings import MEDIA_ROOT
-from goods.views_base import GoodsListView
+# from goods.views_base import GoodsListView
+from goods.views import GoodsViewSet
 
 # XAdmin:model自动注册
 xadmin.autodiscover()
 xversion.register_models()
 
+# DRF:REST风格的router
+router = DefaultRouter()
+router.register(r'goods', GoodsViewSet, base_name="goods")
+
 urlpatterns = [
+    path('', include(router.urls)),
     path('xadmin/', xadmin.site.urls),
-    path('goods/', GoodsListView.as_view(), name="goods-list"),
+    # path('goods/', GoodsListView.as_view(), name="goods-list"),
     # 处理图片显示的url,使用Django自带serve,传入参数告诉它去哪个路径找,使用配置好的路径
     re_path('media/(?P<path>.*)', serve, {"document_root": MEDIA_ROOT}),
 ]

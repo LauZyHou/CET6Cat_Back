@@ -52,7 +52,7 @@ INSTALLED_APPS = [
     'corsheaders',
     'reversion',
     'xadmin',
-    'goods',
+    'goods.apps.GoodsConfig',
     'users.apps.UsersConfig',
     # 'users',
     'videos.apps.VideosConfig',
