@@ -3,16 +3,16 @@ CET6Cat英语六级辅导网后端，Django REST framework。
 ## 前端项目地址
 [CET6Cat_Front](https://github.com/LauZyHou/CET6Cat_Front)
 ## 项目构建
-#### 导入环境
+### 导入环境
 ``` bash
 conda env create -f environment.yml
 ```
-#### 创建并填充文件
+### 创建并填充文件
 /CET6Cat/privacy.py
 
-#### 配置数据库
+### 配置数据库
 创建MySQL数据库，并将相关信息配置。数据库使用utf8编码，且选择第一种排序方式。
-#### 运行Task指令
+### 运行Task指令
 ``` bash
 python manage.py makemigrations
 

@@ -60,6 +60,7 @@ INSTALLED_APPS = [
     'readings.apps.ReadingsConfig',
     'essays.apps.EssaysConfig',
     'favorites.apps.FavoritesConfig',
+    'others.apps.OthersConfig',
 ]
 
 # 项目使用的中间件

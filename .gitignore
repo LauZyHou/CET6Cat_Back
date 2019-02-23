@@ -126,6 +126,7 @@ media/video_thumb/*
 media/videos/*
 media/readings/*
 media/essays/*
+media/banner/*
 
 # 保留含占位文件的目录
 !.gitkeep
