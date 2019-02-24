@@ -28,7 +28,7 @@ class Post(models.Model):
 
 class Reply(models.Model):
     """回帖"""
-    post = models.ForeignKey(Post, on_delete=models.CASCADE, verbose_name="基帖")
+    post = models.ForeignKey(Post, on_delete=models.CASCADE, verbose_name="基帖", related_name="replies")
     content = models.CharField(max_length=100, null=True, blank=True, verbose_name="回帖内容")
     uper = models.ForeignKey(UserProfile, on_delete=models.CASCADE, verbose_name="回帖人")
     add_time = models.DateTimeField(default=datetime.now, verbose_name="回帖时间")

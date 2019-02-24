@@ -25,6 +25,7 @@ from xadmin.plugins import xversion
 from CET6Cat.settings import MEDIA_ROOT
 # from goods.views_base import GoodsListView
 from goods.views import GoodsViewSet
+from posts.views import PostViewSet
 
 # XAdmin:model自动注册
 xadmin.autodiscover()
@@ -33,6 +34,7 @@ xversion.register_models()
 # DRF:REST风格的router
 router = DefaultRouter()
 router.register(r'goods', GoodsViewSet, base_name="goods")
+router.register(r'posts', PostViewSet, base_name="posts")
 
 urlpatterns = [
     path('', include(router.urls)),
