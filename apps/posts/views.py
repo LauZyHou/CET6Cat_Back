@@ -28,7 +28,7 @@ class PostViewSet(mixins.ListModelMixin,
     ordering = ('id',)
 
     def get_serializer_class(self):
-        """列表和详情的Serializer分开"""
+        """list和retrieve的Serializer分开"""
         if self.action == 'list':
             return PostSerializer
         else:

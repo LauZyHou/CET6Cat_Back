@@ -19,7 +19,7 @@ class Reading(models.Model):
     """文章"""
     name = models.CharField(max_length=30, null=True, blank=True, verbose_name="文章标题")
     content = models.FileField(upload_to="readings/", null=True, blank=True, verbose_name="文章内容")
-    source = models.ForeignKey(Site, on_delete=models.CASCADE, verbose_name="来源")
+    source = models.ForeignKey(Site, on_delete=models.CASCADE, verbose_name="来源", related_name="readings")
     add_time = models.DateTimeField(default=datetime.now, verbose_name="添加时间")
 
     class Meta:

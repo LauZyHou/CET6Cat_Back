@@ -26,6 +26,7 @@ from CET6Cat.settings import MEDIA_ROOT
 # from goods.views_base import GoodsListView
 from goods.views import GoodsViewSet
 from posts.views import PostViewSet
+from readings.views import ReadingViewSet
 
 # XAdmin:model自动注册
 xadmin.autodiscover()
@@ -35,6 +36,7 @@ xversion.register_models()
 router = DefaultRouter()
 router.register(r'goods', GoodsViewSet, base_name="goods")
 router.register(r'posts', PostViewSet, base_name="posts")
+router.register(r'readings', ReadingViewSet, base_name="readings")
 
 urlpatterns = [
     path('', include(router.urls)),
