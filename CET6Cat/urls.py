@@ -28,6 +28,7 @@ from goods.views import GoodsViewSet
 from posts.views import PostViewSet
 from readings.views import ReadingViewSet
 from essays.views import EssayViewSet
+from videos.views import VideoViewSet
 
 # XAdmin:model自动注册
 xadmin.autodiscover()
@@ -39,6 +40,7 @@ router.register(r'goods', GoodsViewSet, base_name="goods")
 router.register(r'posts', PostViewSet, base_name="posts")
 router.register(r'readings', ReadingViewSet, base_name="readings")
 router.register(r'essays', EssayViewSet, base_name="essays")
+router.register(r'videos', VideoViewSet, base_name="videos")
 
 urlpatterns = [
     path('', include(router.urls)),
