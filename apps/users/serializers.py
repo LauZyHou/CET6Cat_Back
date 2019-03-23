@@ -111,4 +111,7 @@ class UserDetailSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = UserProfile
-        fields = ("username", "gender", "birthday", "email", "mobile")
+        fields = ("username", "name", "birthday", "gender", "mobile",
+                  "email", "college", "catb", "brief", "head_img",
+                  "switch_sec", "email_notice", "conti_punch", "last_punch",
+                  "words_num", "vip")

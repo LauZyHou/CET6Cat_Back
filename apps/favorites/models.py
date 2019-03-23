@@ -18,6 +18,7 @@ class Watch(models.Model):
     class Meta:
         verbose_name = "关注"
         verbose_name_plural = "关注们"
+        unique_together = ("base", "uper")
 
     def __str__(self):
         return self.base.username + "<-" + self.uper.username
@@ -32,6 +33,7 @@ class FavPost(models.Model):
     class Meta:
         verbose_name = "收藏帖子"
         verbose_name_plural = "收藏帖子们"
+        unique_together = ("base", "uper")
 
     def __str__(self):
         return self.base.name + "<-" + self.uper.username
@@ -46,6 +48,7 @@ class FavVideo(models.Model):
     class Meta:
         verbose_name = "收藏视频"
         verbose_name_plural = "收藏视频们"
+        unique_together = ("base", "uper")
 
     def __str__(self):
         return self.base.name + "<-" + self.uper.username
@@ -60,6 +63,7 @@ class FavReading(models.Model):
     class Meta:
         verbose_name = "收藏文章"
         verbose_name_plural = "收藏文章们"
+        unique_together = ("base", "uper")
 
     def __str__(self):
         return self.base.name + "<-" + self.uper.username
@@ -74,6 +78,7 @@ class FavEssay(models.Model):
     class Meta:
         verbose_name = "收藏作文"
         verbose_name_plural = "收藏作文们"
+        unique_together = ("base", "uper")
 
     def __str__(self):
         return self.base.name + "<-" + self.uper.username
