@@ -3,9 +3,60 @@ from favorites.models import Watch, FavPost, FavVideo, FavReading, FavEssay
 from rest_framework.validators import UniqueTogetherValidator
 
 from posts.models import Post
+from users.models import UserProfile
 
 
-# ------------------------------------------------------------------------------------
+# ---------------------------------[我关注的人]-----------------------------------------
+
+class UserProfileSerializer(serializers.ModelSerializer):
+    """专用于[MyWatchDetailSerializer]的用户(被关注者)序列化类"""
+
+    class Meta:
+        model = UserProfile
+        fields = ("id", "name", "gender", "head_img")
+
+
+class MyWatchSerializer(serializers.ModelSerializer):
+    """我关注的人"""
+    # 用户收藏时不指明用户,只操作自己这个用户
+    uper = serializers.HiddenField(
+        default=serializers.CurrentUserDefault()
+    )
+
+    # 设置read_only只返回(用于持久化 & 返回给前端),不在用户提交时要求用户提供
+    add_time = serializers.DateTimeField(read_only=True, format='%Y-%m-%d %H:%M')
+
+    def validate(self, attrs):
+        """验证,禁止用户关注自己"""
+        if attrs["base"] == attrs["uper"]:
+            raise serializers.ValidationError("不能关注自己")
+        return attrs
+
+    class Meta:
+        model = Watch
+        # 实现唯一联合,不允许重复收藏,在Model级别也做了
+        validators = [
+            UniqueTogetherValidator(
+                queryset=Watch.objects.all(),
+                fields=('base', 'uper'),
+                message="您已关注过该用户"
+            )
+        ]
+        fields = ("base", "uper", "add_time")
+
+
+class MyWatchDetailSerializer(serializers.ModelSerializer):
+    """我关注的人(被关注者详细)"""
+
+    # 覆盖掉之前仅仅是UserProfile的id的base字段
+    base = UserProfileSerializer()
+
+    class Meta:
+        model = Watch
+        fields = ("id", "base")  # 这里id将被返回给前端,这样在destroy时前端才能提供id
+
+
+# ---------------------------------[我收藏的帖子]-----------------------------------------
 
 class PostSerializer(serializers.ModelSerializer):
     """专用于[FavPostDetailSerializer]的帖子序列化类"""
@@ -16,9 +67,9 @@ class PostSerializer(serializers.ModelSerializer):
 
 
 class FavPostSerializer(serializers.ModelSerializer):
-    """收藏帖子"""
+    """我收藏的帖子"""
 
-    # 用户收藏时不指明用户,只操作自己这个用户
+    # 用户收藏时不指明用户,只操作"我"这个用户
     uper = serializers.HiddenField(
         default=serializers.CurrentUserDefault()
     )
@@ -40,7 +91,7 @@ class FavPostSerializer(serializers.ModelSerializer):
 
 
 class FavPostDetailSerializer(serializers.ModelSerializer):
-    """收藏帖子（帖子详细）"""
+    """我收藏的帖子(帖子详细)"""
 
     # 不需要再用隐藏字段指明uper,因为该字段仅用于list视图,不存在create时需要知道uper是谁的问题
     # 在FavPostViewSet中已经只返回了本用户的数据
@@ -51,3 +102,5 @@ class FavPostDetailSerializer(serializers.ModelSerializer):
     class Meta:
         model = FavPost
         fields = ("id", "base")  # 这里id将被返回给前端,这样在destroy时前端才能提供id
+
+# ---------------------------------[]-----------------------------------------

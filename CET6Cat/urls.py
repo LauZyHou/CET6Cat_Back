@@ -32,7 +32,7 @@ from readings.views import ReadingViewSet
 from essays.views import EssayViewSet
 from videos.views import VideoViewSet
 from users.views import SmsCodeViewset, UserViewset
-from favorites.views import FavPostViewSet
+from favorites.views import MyWatchViewSet, FavPostViewSet
 
 # XAdmin:model自动注册
 xadmin.autodiscover()
@@ -47,6 +47,7 @@ router.register(r'essays', EssayViewSet, base_name="essays")
 router.register(r'videos', VideoViewSet, base_name="videos")
 router.register(r'code', SmsCodeViewset, base_name="code")
 router.register(r'users', UserViewset, base_name="users")
+router.register(r'mywatch', MyWatchViewSet, base_name="mywatch")
 router.register(r'favpost', FavPostViewSet, base_name="favpost")
 
 urlpatterns = [
