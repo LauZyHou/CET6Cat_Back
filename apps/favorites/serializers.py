@@ -3,10 +3,11 @@ from favorites.models import Watch, FavPost, FavVideo, FavReading, FavEssay
 from rest_framework.validators import UniqueTogetherValidator
 
 from posts.models import Post
+from videos.models import Video
 from users.models import UserProfile
 
 
-# ---------------------------------[通用的临时Serializer]-----------------------------------------
+# ---------------------------------[临时Serializer]-----------------------------------------
 
 class UserProfileSerializer(serializers.ModelSerializer):
     """用于[MyWatchDetailSerializer/WatchMeDetailSerializer]的用户(被关注者/关注者)序列化类"""
@@ -16,11 +17,27 @@ class UserProfileSerializer(serializers.ModelSerializer):
         fields = ("id", "name", "gender", "head_img")
 
 
+class PostSerializer(serializers.ModelSerializer):
+    """专用于[FavPostDetailSerializer]的帖子序列化类"""
+
+    class Meta:
+        model = Post
+        fields = ("id", "name")
+
+
+class VideoSerializer(serializers.ModelSerializer):
+    """专用于[FavVideoDetailSerializer]的视频序列化类"""
+
+    class Meta:
+        model = Video
+        fields = ("id", "name")
+
+
 # ---------------------------------[我关注的人]-----------------------------------------
 
 
 class MyWatchSerializer(serializers.ModelSerializer):
-    """我关注的人"""
+    """我关注的人 >>create,destroy"""
     # 用户收藏时不指明用户,只操作自己这个用户
     uper = serializers.HiddenField(
         default=serializers.CurrentUserDefault()
@@ -49,7 +66,7 @@ class MyWatchSerializer(serializers.ModelSerializer):
 
 
 class MyWatchDetailSerializer(serializers.ModelSerializer):
-    """我关注的人(被关注者详细)"""
+    """我关注的人(被关注者详细) >>list"""
 
     # 覆盖掉之前仅仅是UserProfile的id的base字段
     base = UserProfileSerializer()
@@ -62,7 +79,7 @@ class MyWatchDetailSerializer(serializers.ModelSerializer):
 # ---------------------------------[关注我的人]-----------------------------------------
 
 class WatchMeDetailSerializer(serializers.ModelSerializer):
-    """关注我的人(关注者详细)"""
+    """关注我的人(关注者详细) >>list"""
 
     # 覆盖掉之前仅仅是UserProfile的id的uper字段
     uper = UserProfileSerializer()
@@ -74,16 +91,8 @@ class WatchMeDetailSerializer(serializers.ModelSerializer):
 
 # ---------------------------------[我收藏的帖子]-----------------------------------------
 
-class PostSerializer(serializers.ModelSerializer):
-    """专用于[FavPostDetailSerializer]的帖子序列化类"""
-
-    class Meta:
-        model = Post
-        fields = ("id", "name")
-
-
 class FavPostSerializer(serializers.ModelSerializer):
-    """我收藏的帖子"""
+    """我收藏的帖子 >>create,destroy"""
 
     # 用户收藏时不指明用户,只操作"我"这个用户
     uper = serializers.HiddenField(
@@ -107,7 +116,7 @@ class FavPostSerializer(serializers.ModelSerializer):
 
 
 class FavPostDetailSerializer(serializers.ModelSerializer):
-    """我收藏的帖子(帖子详细)"""
+    """我收藏的帖子(帖子详细) >>list"""
 
     # 不需要再用隐藏字段指明uper,因为该字段仅用于list视图,不存在create时需要知道uper是谁的问题
     # 在FavPostViewSet中已经只返回了本用户的数据
@@ -119,4 +128,40 @@ class FavPostDetailSerializer(serializers.ModelSerializer):
         model = FavPost
         fields = ("id", "base")  # 这里id将被返回给前端,这样在destroy时前端才能提供id
 
+
+# ---------------------------------[我收藏的视频]-----------------------------------------
+
+class FavVideoSerializer(serializers.ModelSerializer):
+    """我收藏的视频 >>create,destroy"""
+    uper = serializers.HiddenField(
+        default=serializers.CurrentUserDefault()
+    )
+
+    add_time = serializers.DateTimeField(read_only=True, format='%Y-%m-%d %H:%M')
+
+    class Meta:
+        model = FavVideo
+        validators = [
+            UniqueTogetherValidator(
+                queryset=FavVideo.objects.all(),
+                fields=('base', 'uper'),
+                message="视频已经收藏"
+            )
+        ]
+        fields = ("base", "uper", "add_time")
+
+
+class FavVideoDetailSerializer(serializers.ModelSerializer):
+    """我收藏的视频(视频详细) >>list"""
+    base = VideoSerializer()
+
+    class Meta:
+        model = FavVideo
+        fields = ("id", "base")
+
+# ---------------------------------[我收藏的文章]-----------------------------------------
+
+# ---------------------------------[我收藏的作文]-----------------------------------------
+
 # ---------------------------------[]-----------------------------------------
+
