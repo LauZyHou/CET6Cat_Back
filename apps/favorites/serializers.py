@@ -6,14 +6,17 @@ from posts.models import Post
 from users.models import UserProfile
 
 
-# ---------------------------------[我关注的人]-----------------------------------------
+# ---------------------------------[通用的临时Serializer]-----------------------------------------
 
 class UserProfileSerializer(serializers.ModelSerializer):
-    """专用于[MyWatchDetailSerializer]的用户(被关注者)序列化类"""
+    """用于[MyWatchDetailSerializer/WatchMeDetailSerializer]的用户(被关注者/关注者)序列化类"""
 
     class Meta:
         model = UserProfile
         fields = ("id", "name", "gender", "head_img")
+
+
+# ---------------------------------[我关注的人]-----------------------------------------
 
 
 class MyWatchSerializer(serializers.ModelSerializer):
@@ -54,6 +57,19 @@ class MyWatchDetailSerializer(serializers.ModelSerializer):
     class Meta:
         model = Watch
         fields = ("id", "base")  # 这里id将被返回给前端,这样在destroy时前端才能提供id
+
+
+# ---------------------------------[关注我的人]-----------------------------------------
+
+class WatchMeDetailSerializer(serializers.ModelSerializer):
+    """关注我的人(关注者详细)"""
+
+    # 覆盖掉之前仅仅是UserProfile的id的uper字段
+    uper = UserProfileSerializer()
+
+    class Meta:
+        model = Watch
+        fields = ("id", "uper")  # 前端不会提交DELETE,这个id仅仅用于和"我关注的人"list接口返回结构适应
 
 
 # ---------------------------------[我收藏的帖子]-----------------------------------------

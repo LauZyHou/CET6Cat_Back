@@ -5,6 +5,7 @@ from rest_framework.response import Response
 
 from favorites.models import Watch, FavPost, FavVideo, FavReading, FavEssay
 from favorites.serializers import MyWatchSerializer, MyWatchDetailSerializer
+from favorites.serializers import WatchMeDetailSerializer
 from favorites.serializers import FavPostSerializer, FavPostDetailSerializer
 
 
@@ -51,6 +52,28 @@ class MyWatchViewSet(mixins.CreateModelMixin,
     def list(self, request, *args, **kwargs):
         """
         列出全部：我关注的人
+        """
+        return super().list(request, args, kwargs)
+
+
+# ---------------------------------[关注我的人]-----------------------------------------
+
+class WatchMeViewSet(mixins.ListModelMixin,
+                     viewsets.GenericViewSet):
+    """关注我的人 list时向此view请求"""
+    # 用户认证(普通用户从CET6Cat登录用的是JWT,管理员用户从XAdmin登录用的是Session)
+    authentication_classes = (JSONWebTokenAuthentication, authentication.SessionAuthentication)
+    # 访问权限认证:已登录.这对针对该view的所有HTTP方法都适用
+    permission_classes = (permissions.IsAuthenticated,)
+    serializer_class = WatchMeDetailSerializer
+
+    def get_queryset(self):
+        """只返回关注我的条目"""
+        return Watch.objects.filter(base=self.request.user.id)
+
+    def list(self, request, *args, **kwargs):
+        """
+        列出全部：关注我的人
         """
         return super().list(request, args, kwargs)
 
