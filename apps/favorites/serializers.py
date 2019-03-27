@@ -4,6 +4,7 @@ from rest_framework.validators import UniqueTogetherValidator
 
 from posts.models import Post
 from videos.models import Video
+from readings.models import Reading
 from users.models import UserProfile
 
 
@@ -30,6 +31,14 @@ class VideoSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Video
+        fields = ("id", "name")
+
+
+class ReadingSerializer(serializers.ModelSerializer):
+    """专用于[FavReadingDetailSerializer]的文章序列化类"""
+
+    class Meta:
+        model = Reading
         fields = ("id", "name")
 
 
@@ -159,9 +168,37 @@ class FavVideoDetailSerializer(serializers.ModelSerializer):
         model = FavVideo
         fields = ("id", "base")
 
+
 # ---------------------------------[我收藏的文章]-----------------------------------------
+
+class FavReadingSerializer(serializers.ModelSerializer):
+    """我收藏的文章 >>create,destroy"""
+    uper = serializers.HiddenField(
+        default=serializers.CurrentUserDefault()
+    )
+
+    add_time = serializers.DateTimeField(read_only=True, format='%Y-%m-%d %H:%M')
+
+    class Meta:
+        model = FavReading
+        validators = [
+            UniqueTogetherValidator(
+                queryset=FavReading.objects.all(),
+                fields=('base', 'uper'),
+                message="文章已经收藏"
+            )
+        ]
+        fields = ("base", "uper", "add_time")
+
+
+class FavReadingDetailSerializer(serializers.ModelSerializer):
+    """我收藏的文章(文章详细) >>list"""
+    base = ReadingSerializer()
+
+    class Meta:
+        model = FavReading
+        fields = ("id", "base")
 
 # ---------------------------------[我收藏的作文]-----------------------------------------
 
 # ---------------------------------[]-----------------------------------------
-
