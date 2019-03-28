@@ -6,6 +6,7 @@ from posts.models import Post
 from videos.models import Video
 from readings.models import Reading
 from users.models import UserProfile
+from essays.models import Essay
 
 
 # ---------------------------------[临时Serializer]-----------------------------------------
@@ -39,6 +40,14 @@ class ReadingSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Reading
+        fields = ("id", "name")
+
+
+class EssaySerializer(serializers.ModelSerializer):
+    """专用于[FavEssayDetailSerializer]的作文序列化类"""
+
+    class Meta:
+        model = Essay
         fields = ("id", "name")
 
 
@@ -199,6 +208,35 @@ class FavReadingDetailSerializer(serializers.ModelSerializer):
         model = FavReading
         fields = ("id", "base")
 
+
 # ---------------------------------[我收藏的作文]-----------------------------------------
+
+class FavEssaySerializer(serializers.ModelSerializer):
+    """我收藏的作文 >>create,destroy"""
+    uper = serializers.HiddenField(
+        default=serializers.CurrentUserDefault()
+    )
+
+    add_time = serializers.DateTimeField(read_only=True, format='%Y-%m-%d %H:%M')
+
+    class Meta:
+        model = FavEssay
+        validators = [
+            UniqueTogetherValidator(
+                queryset=FavEssay.objects.all(),
+                fields=('base', 'uper'),
+                message="作文已经收藏"
+            )
+        ]
+        fields = ("base", "uper", "add_time")
+
+
+class FavEssayDetailSerializer(serializers.ModelSerializer):
+    """我收藏的作文(作文详细) >>list"""
+    base = EssaySerializer()
+
+    class Meta:
+        model = FavEssay
+        fields = ("id", "base")
 
 # ---------------------------------[]-----------------------------------------
