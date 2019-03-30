@@ -2,6 +2,7 @@ from rest_framework import mixins, permissions, authentication
 from rest_framework import viewsets, status
 from rest_framework_jwt.authentication import JSONWebTokenAuthentication
 from rest_framework.response import Response
+from rest_framework.pagination import PageNumberPagination
 
 from favorites.models import Watch, FavPost, FavVideo, FavReading, FavEssay
 from favorites.serializers import MyWatchSerializer, MyWatchDetailSerializer
@@ -10,6 +11,16 @@ from favorites.serializers import FavPostSerializer, FavPostDetailSerializer
 from favorites.serializers import FavVideoSerializer, FavVideoDetailSerializer
 from favorites.serializers import FavReadingSerializer, FavReadingDetailSerializer
 from favorites.serializers import FavEssaySerializer, FavEssayDetailSerializer
+
+
+# ---------------------------------[分页]-----------------------------------------
+
+class FavPagination(PageNumberPagination):
+    """收藏xx的分页,一页6条"""
+    page_size = 6
+    page_size_query_param = 'page_size'
+    page_query_param = 'page'
+    max_page_size = 10
 
 
 # ---------------------------------[我关注的人]-----------------------------------------
@@ -34,7 +45,7 @@ class MyWatchViewSet(mixins.CreateModelMixin,
 
     def get_queryset(self):
         """只返回我关注的条目"""
-        return Watch.objects.filter(uper=self.request.user.id)
+        return Watch.objects.filter(uper=self.request.user.id).order_by("id")
 
     def create(self, request, *args, **kwargs):
         """
@@ -72,7 +83,7 @@ class WatchMeViewSet(mixins.ListModelMixin,
 
     def get_queryset(self):
         """只返回关注我的条目"""
-        return Watch.objects.filter(base=self.request.user.id)
+        return Watch.objects.filter(base=self.request.user.id).order_by("id")
 
     def list(self, request, *args, **kwargs):
         """
@@ -96,6 +107,8 @@ class FavPostViewSet(mixins.CreateModelMixin,
     authentication_classes = (JSONWebTokenAuthentication, authentication.SessionAuthentication)
     # 访问权限认证:已登录.这对针对该view的所有HTTP方法都适用
     permission_classes = (permissions.IsAuthenticated,)
+    # 分页
+    pagination_class = FavPagination
 
     def get_serializer_class(self):
         """动态获取序列化类"""
@@ -105,7 +118,7 @@ class FavPostViewSet(mixins.CreateModelMixin,
 
     def get_queryset(self):
         """只返回我关注的条目"""
-        return FavPost.objects.filter(uper=self.request.user.id)
+        return FavPost.objects.filter(uper=self.request.user.id).order_by("id")
 
     def create(self, request, *args, **kwargs):
         """
@@ -142,6 +155,8 @@ class FavVideoViewSet(mixins.ListModelMixin,
     authentication_classes = (JSONWebTokenAuthentication, authentication.SessionAuthentication)
     # 访问权限认证:已登录.这对针对该view的所有HTTP方法都适用
     permission_classes = (permissions.IsAuthenticated,)
+    # 分页
+    pagination_class = FavPagination
 
     def get_serializer_class(self):
         """动态获取序列化类"""
@@ -151,7 +166,7 @@ class FavVideoViewSet(mixins.ListModelMixin,
 
     def get_queryset(self):
         """只返回我关注的条目"""
-        return FavVideo.objects.filter(uper=self.request.user.id)
+        return FavVideo.objects.filter(uper=self.request.user.id).order_by("id")
 
     def create(self, request, *args, **kwargs):
         """
@@ -188,6 +203,8 @@ class FavReadingViewSet(mixins.ListModelMixin,
     authentication_classes = (JSONWebTokenAuthentication, authentication.SessionAuthentication)
     # 访问权限认证:已登录.这对针对该view的所有HTTP方法都适用
     permission_classes = (permissions.IsAuthenticated,)
+    # 分页
+    pagination_class = FavPagination
 
     def get_serializer_class(self):
         """动态获取序列化类"""
@@ -197,7 +214,7 @@ class FavReadingViewSet(mixins.ListModelMixin,
 
     def get_queryset(self):
         """只返回我关注的条目"""
-        return FavReading.objects.filter(uper=self.request.user.id)
+        return FavReading.objects.filter(uper=self.request.user.id).order_by("id")
 
     def create(self, request, *args, **kwargs):
         """
@@ -234,6 +251,8 @@ class FavEssayViewSet(mixins.ListModelMixin,
     authentication_classes = (JSONWebTokenAuthentication, authentication.SessionAuthentication)
     # 访问权限认证:已登录.这对针对该view的所有HTTP方法都适用
     permission_classes = (permissions.IsAuthenticated,)
+    # 分页
+    pagination_class = FavPagination
 
     def get_serializer_class(self):
         """动态获取序列化类"""
@@ -243,7 +262,7 @@ class FavEssayViewSet(mixins.ListModelMixin,
 
     def get_queryset(self):
         """只返回我关注的条目"""
-        return FavEssay.objects.filter(uper=self.request.user.id)
+        return FavEssay.objects.filter(uper=self.request.user.id).order_by("id")
 
     def create(self, request, *args, **kwargs):
         """

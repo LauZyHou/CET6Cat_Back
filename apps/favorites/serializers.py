@@ -144,7 +144,7 @@ class FavPostDetailSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = FavPost
-        fields = ("id", "base")  # 这里id将被返回给前端,这样在destroy时前端才能提供id
+        fields = ("id", "base", "add_time")  # 这里id将被返回给前端,这样在destroy时前端才能提供id
 
 
 # ---------------------------------[我收藏的视频]-----------------------------------------
@@ -175,7 +175,7 @@ class FavVideoDetailSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = FavVideo
-        fields = ("id", "base")
+        fields = ("id", "base", "add_time")
 
 
 # ---------------------------------[我收藏的文章]-----------------------------------------
@@ -206,7 +206,7 @@ class FavReadingDetailSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = FavReading
-        fields = ("id", "base")
+        fields = ("id", "base", "add_time")
 
 
 # ---------------------------------[我收藏的作文]-----------------------------------------
@@ -237,6 +237,6 @@ class FavEssayDetailSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = FavEssay
-        fields = ("id", "base")
+        fields = ("id", "base", "add_time")
 
 # ---------------------------------[]-----------------------------------------
