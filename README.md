@@ -8,7 +8,7 @@ CET6Cat英语六级辅导网后端，Django REST framework。
 conda env create -f environment.yml
 ```
 ### 创建并填充文件
-/CET6Cat/privacy.py
+文件`/CET6Cat/privacy.py`中配置了必要但隐私的信息（如API KEY），按照同目录下的模板文件创建该文件。
 
 ### 配置数据库
 创建MySQL数据库，并将相关信息配置。数据库使用utf8编码，且选择第一种排序方式。
@@ -30,3 +30,5 @@ python manage.py createsuperuser
 ```
 'users'
 ```
+### 填充数据
+填充六级单词数据，直接运行`db_tools/`目录下的`gen_word.py`脚本。

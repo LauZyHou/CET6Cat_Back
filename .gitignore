@@ -115,6 +115,7 @@ privacy.py
 
 # 静态资源
 static/*
+!static/words
 collect_static/*
 
 # 工具包
