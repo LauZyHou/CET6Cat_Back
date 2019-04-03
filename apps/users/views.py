@@ -141,3 +141,11 @@ class UserViewset(mixins.CreateModelMixin,
     def update(self, request, *args, **kwargs):
         """更新本用户信息(需身份验证,id无论提供多少,仅更新本用户的信息)"""
         return super().update(request, args, kwargs)
+
+    def partial_update(self, request, *args, **kwargs):
+        """部分更新,只更新提供的字段(需身份验证,id无论提供多少,仅更新本用户的信息)"""
+        kwargs['partial'] = True
+        # 因为用户名是必填项目,在部分更新时为了不要求提供,直接从authorization中取用
+        if "username" not in request.data.keys():
+            request.data.update({"username": self.request.user.username})
+        return self.update(request, *args, **kwargs)

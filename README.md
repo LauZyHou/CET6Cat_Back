@@ -32,3 +32,7 @@ python manage.py createsuperuser
 ```
 ### 填充数据
 填充六级单词数据，直接运行`db_tools/`目录下的`gen_word.py`脚本。
+
+注意，不要重复运行，不然数据库表里的单词就越来越多了（我没有做联合unique约束）。
+
+如果重复运行了怎么办？先把`words_word`表删掉，然后删除表`django_migrations`中生成`words_word`表的那项记录，然后在Task中重新`migrate`就生成了空表，然后再运行上面那个脚本一次。
