@@ -31,7 +31,7 @@ from posts.views import PostViewSet
 from readings.views import ReadingViewSet
 from essays.views import EssayViewSet
 from videos.views import VideoViewSet
-from users.views import SmsCodeViewset, UserViewset
+from users.views import SmsCodeViewset, UserViewset, UserMsgViewSet
 from favorites.views import MyWatchViewSet, WatchMeViewSet
 from favorites.views import FavPostViewSet, FavVideoViewSet, FavReadingViewSet, FavEssayViewSet
 from others.views import BannerViewSet
@@ -56,6 +56,7 @@ router.register(r'favvideo', FavVideoViewSet, base_name="favvideo")
 router.register(r'favreading', FavReadingViewSet, base_name="favreading")
 router.register(r'favessay', FavEssayViewSet, base_name="favessay")
 router.register(r'banners', BannerViewSet, base_name="banners")
+router.register(r'usermsg', UserMsgViewSet, base_name="usermsg")
 
 urlpatterns = [
     path('', include(router.urls)),

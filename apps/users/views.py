@@ -12,7 +12,9 @@ from rest_framework import viewsets, status
 
 from utils.yunpian import YunPian
 from users.models import VerifyCode, UserProfile
-from users.serializers import SmsSerializer, UserRegSerializer, UserDetailSerializer
+from favorites.models import Watch
+from posts.models import Post
+from users.serializers import SmsSerializer, UserRegSerializer, UserDetailSerializer, UserMsgSerializer
 from CET6Cat.privacy import YUNPIAN_KEY
 
 
@@ -149,3 +151,37 @@ class UserViewset(mixins.CreateModelMixin,
         if "username" not in request.data.keys():
             request.data.update({"username": self.request.user.username})
         return self.update(request, *args, **kwargs)
+
+
+class UserMsgViewSet(mixins.RetrieveModelMixin,
+                     viewsets.GenericViewSet):
+    """
+    对其它用户的操作视图
+    """
+    queryset = UserProfile.objects.all()
+    # 用户认证(普通用户从CET6Cat登录用的是JWT,管理员用户从XAdmin登录用的是Session)
+    authentication_classes = (JSONWebTokenAuthentication, authentication.SessionAuthentication)
+    # 需要登录了才能访问该视图
+    permission_classes = (permissions.IsAuthenticated,)
+    serializer_class = UserMsgSerializer
+
+    def retrieve(self, request, *args, **kwargs):
+        """获取用户的简要信息"""
+        instance = self.get_object()
+        serializer = self.get_serializer(instance)
+        # 获取该用户关注的用户数,以及该用户被多少用户关注
+        follow_num = Watch.objects.filter(uper=instance.id).count()
+        follower_num = Watch.objects.filter(base=instance.id).count()
+        # 计算发帖数
+        post_num = Post.objects.filter(uper=instance.id).count()
+        # 因为rest_framework.utils.serializer_helpers.ReturnDict直接设置字段没用
+        # 所以把字段都从serializer.data中取出来放到普通的字典里返回一下
+        res = {}
+        for k in serializer.data:
+            res[k] = serializer.data[k]
+        res["follow_num"] = follow_num
+        res["follower_num"] = follower_num
+        res["post_num"] = post_num
+        # 判断一下当前用户是否关注了此用户
+        res["watched"] = Watch.objects.filter(uper=request.user.id, base=instance.id).count() > 0
+        return Response(res)

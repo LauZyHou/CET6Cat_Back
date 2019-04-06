@@ -56,10 +56,11 @@ class MyWatchViewSet(mixins.CreateModelMixin,
 
     def destroy(self, request, *args, **kwargs):
         """
-        删除：我关注的人
+        删除：我关注的人(传入的是被删除User的id,而不是在Watch表中的id)
         注意文档中的DELETE方法的接口测试起来有问题，可以用Postman测试
         """
-        instance = self.get_object()
+        # instance = self.get_object()
+        instance = Watch.objects.filter(uper=self.request.user.id, base=kwargs['pk'])
         self.perform_destroy(instance)
         return Response({"detail": "删除成功"}, status=status.HTTP_204_NO_CONTENT)
 

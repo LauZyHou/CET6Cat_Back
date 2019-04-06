@@ -6,6 +6,7 @@ from users.models import VerifyCode
 from rest_framework import serializers
 
 from users.models import UserProfile
+from favorites.models import Watch
 from CET6Cat.settings import REGEX_MOBILE
 
 
@@ -106,12 +107,23 @@ class UserRegSerializer(serializers.ModelSerializer):
 
 class UserDetailSerializer(serializers.ModelSerializer):
     """
-    用户retrieve用此Serializer
+    用户retrieve自己,用此Serializer(给详细信息)
     """
 
     class Meta:
         model = UserProfile
-        fields = ("username", "name", "birthday", "gender", "mobile",
+        fields = ("id", "username", "name", "birthday", "gender", "mobile",
                   "email", "college", "catb", "brief", "head_img",
                   "switch_sec", "email_notice", "conti_punch", "last_punch",
                   "words_num", "vip")
+
+
+class UserMsgSerializer(serializers.ModelSerializer):
+    """
+    用户retrieve任意用户,用此Serializer(只给简要信息)
+    """
+
+    class Meta:
+        model = UserProfile
+        fields = ("name", "gender", "college", "brief", "head_img",
+                  "conti_punch", "words_num", "vip")
