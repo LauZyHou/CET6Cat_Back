@@ -127,3 +127,19 @@ class UserMsgSerializer(serializers.ModelSerializer):
         model = UserProfile
         fields = ("name", "gender", "college", "brief", "head_img",
                   "conti_punch", "words_num", "vip")
+
+
+class PunchSerializer(serializers.ModelSerializer):
+    """
+    用户打卡时使用该视图
+    """
+    # 这两个字段只读(只返回给用户看,不用于写入)
+    name = serializers.CharField(read_only=True)
+    head_img = serializers.ImageField(read_only=True)
+
+    # conti_punch和last_punch在View中设置
+    # words_num由前台传过来
+
+    class Meta:
+        model = UserProfile
+        fields = ("name", "head_img", "conti_punch", "last_punch", "words_num")

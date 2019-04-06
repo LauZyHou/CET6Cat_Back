@@ -1,4 +1,5 @@
 from random import choice
+import datetime
 
 from django.contrib.auth.backends import ModelBackend
 from django.db.models import Q
@@ -14,7 +15,8 @@ from utils.yunpian import YunPian
 from users.models import VerifyCode, UserProfile
 from favorites.models import Watch
 from posts.models import Post
-from users.serializers import SmsSerializer, UserRegSerializer, UserDetailSerializer, UserMsgSerializer
+from users.serializers import SmsSerializer, UserRegSerializer, \
+    UserDetailSerializer, UserMsgSerializer, PunchSerializer
 from CET6Cat.privacy import YUNPIAN_KEY
 
 
@@ -185,3 +187,43 @@ class UserMsgViewSet(mixins.RetrieveModelMixin,
         # 判断一下当前用户是否关注了此用户
         res["watched"] = Watch.objects.filter(uper=request.user.id, base=instance.id).count() > 0
         return Response(res)
+
+
+class PunchViewSet(mixins.UpdateModelMixin,
+                   viewsets.GenericViewSet):
+    """
+    打卡时PUT请求该视图
+    """
+    queryset = UserProfile.objects.all()
+    # 用户认证(普通用户从CET6Cat登录用的是JWT,管理员用户从XAdmin登录用的是Session)
+    authentication_classes = (JSONWebTokenAuthentication, authentication.SessionAuthentication)
+    # 需要登录了才能访问该视图
+    permission_classes = (permissions.IsAuthenticated,)
+    serializer_class = PunchSerializer
+
+    def get_object(self):
+        """覆写,不管传什么id,都只返回当前用户"""
+        return self.request.user
+
+    def update(self, request, *args, **kwargs):
+        """用户打卡,id随便传入,背到的单词数需要前台提供"""
+        # 获取之前的连续打卡次数
+        conti_punch = request.user.conti_punch
+        # 计算和上次打卡的时间差
+        last = request.user.last_punch  # <class 'datetime.datetime'>
+        last = datetime.datetime(last.year, last.month, last.day)  # <class 'datetime.datetime'>
+        now = datetime.datetime.now()  # <class 'datetime.datetime'>
+        days = (now - last).days
+        # 同一天反复打卡,只更新打卡时间(实际上因为存的是date,打卡时间也不会更新)
+        if days == 0:
+            pass
+        # 相隔2天内,则视为打卡没有中断
+        elif days <= 2:
+            conti_punch += 1
+        # 相隔更多的天数,则打卡中断
+        else:
+            conti_punch = 0
+        # 将要更新的信息(连续打卡天数,最后打卡日期)
+        request.data["conti_punch"] = conti_punch
+        request.data["last_punch"] = now.date()
+        return super().update(request, args, kwargs)
