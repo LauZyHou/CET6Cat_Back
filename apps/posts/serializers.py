@@ -46,3 +46,11 @@ class PostDetailSerializer(serializers.ModelSerializer):
     class Meta:
         model = Post
         fields = "__all__"
+
+
+class PostAddSerializer(serializers.ModelSerializer):
+    """帖子create用这个Serializer"""
+
+    class Meta:
+        model = Post
+        fields = "__all__"
