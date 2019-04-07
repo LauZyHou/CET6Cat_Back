@@ -16,7 +16,7 @@ from users.models import VerifyCode, UserProfile
 from favorites.models import Watch
 from posts.models import Post
 from users.serializers import SmsSerializer, UserRegSerializer, \
-    UserDetailSerializer, UserMsgSerializer, PunchSerializer
+    UserDetailSerializer, UserMsgSerializer, PunchSerializer, GroupSerializer
 from CET6Cat.privacy import YUNPIAN_KEY
 
 
@@ -189,21 +189,31 @@ class UserMsgViewSet(mixins.RetrieveModelMixin,
         return Response(res)
 
 
-class PunchViewSet(mixins.UpdateModelMixin,
+class PunchViewSet(mixins.RetrieveModelMixin,
+                   mixins.UpdateModelMixin,
                    viewsets.GenericViewSet):
     """
-    打卡时PUT请求该视图
+    获取组号时GET请求该视图,打卡时PUT请求该视图
     """
     queryset = UserProfile.objects.all()
     # 用户认证(普通用户从CET6Cat登录用的是JWT,管理员用户从XAdmin登录用的是Session)
     authentication_classes = (JSONWebTokenAuthentication, authentication.SessionAuthentication)
     # 需要登录了才能访问该视图
     permission_classes = (permissions.IsAuthenticated,)
-    serializer_class = PunchSerializer
+
+    def get_serializer_class(self):
+        """覆写,在不同的请求下做不同的序列化"""
+        if self.action == "retrieve":
+            return GroupSerializer  # 获取组号
+        return PunchSerializer  # 打卡更新
 
     def get_object(self):
         """覆写,不管传什么id,都只返回当前用户"""
         return self.request.user
+
+    def retrieve(self, request, *args, **kwargs):
+        """用户获取自己背诵到的单词组号"""
+        return super().retrieve(request, args, kwargs)
 
     def update(self, request, *args, **kwargs):
         """用户打卡,id随便传入,背到的单词数需要前台提供"""

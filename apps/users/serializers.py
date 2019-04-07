@@ -143,3 +143,13 @@ class PunchSerializer(serializers.ModelSerializer):
     class Meta:
         model = UserProfile
         fields = ("name", "head_img", "conti_punch", "last_punch", "words_num")
+
+
+class GroupSerializer(serializers.ModelSerializer):
+    """
+    用户获取组号时使用该视图
+    """
+
+    class Meta:
+        model = UserProfile
+        fields = ("words_num",)
