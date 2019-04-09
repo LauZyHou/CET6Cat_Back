@@ -18,6 +18,8 @@ class Video(models.Model):
     category = models.IntegerField(choices=CATEGORY_CHOICE, default=1, verbose_name="视频类别")
     uper = models.ForeignKey(UserProfile, on_delete=models.CASCADE, verbose_name="上传者", related_name="videos")
     add_time = models.DateTimeField(default=datetime.now, verbose_name="添加时间")
+    click_num = models.IntegerField(default=0, verbose_name="点击量")
+    hot_value = models.IntegerField(default=0, verbose_name="热度指数")
 
     class Meta:
         verbose_name = "视频"

@@ -3,6 +3,7 @@ from rest_framework import viewsets
 from rest_framework.pagination import PageNumberPagination
 from rest_framework import filters
 from django_filters.rest_framework import DjangoFilterBackend
+from rest_framework.response import Response
 
 from videos.models import Video
 from videos.serializers import VideoSerializer, VideoDetailSerializer
@@ -33,3 +34,23 @@ class VideoViewSet(mixins.ListModelMixin,
             return VideoSerializer
         else:
             return VideoDetailSerializer
+
+
+class HotVideoViewSet(mixins.ListModelMixin,
+                       viewsets.GenericViewSet):
+    """首页展示的视频"""
+    queryset = Video.objects.all().order_by("hot_value")
+    serializer_class = VideoSerializer
+
+    def list(self, request, *args, **kwargs):
+        """获取首页展示的视频列表"""
+        queryset = self.filter_queryset(self.get_queryset())
+
+        page = self.paginate_queryset(queryset)
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
+
+        serializer = self.get_serializer(queryset, many=True)
+        # 至多取前8个视频
+        return Response(serializer.data[:8])

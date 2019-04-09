@@ -30,7 +30,7 @@ from goods.views import GoodsViewSet
 from posts.views import PostViewSet
 from readings.views import ReadingViewSet
 from essays.views import EssayViewSet
-from videos.views import VideoViewSet
+from videos.views import VideoViewSet, HotVideoViewSet
 from users.views import SmsCodeViewset, UserViewset, UserMsgViewSet, PunchViewSet
 from favorites.views import MyWatchViewSet, WatchMeViewSet
 from favorites.views import FavPostViewSet, FavVideoViewSet, FavReadingViewSet, FavEssayViewSet
@@ -61,6 +61,7 @@ router.register(r'usermsg', UserMsgViewSet, base_name="usermsg")
 router.register(r'words', WordsViewSet, base_name="words")
 router.register(r'punch', PunchViewSet, base_name="punch")
 router.register(r'wordcloud', WordCloudViewSet, base_name="wordcloud")
+router.register(r'hotvideo', HotVideoViewSet, base_name="hotvideo")
 
 urlpatterns = [
     path('', include(router.urls)),
