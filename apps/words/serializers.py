@@ -9,3 +9,11 @@ class WordSerializer(serializers.ModelSerializer):
     class Meta:
         model = Word
         fields = "__all__"
+
+
+class WordCloudSerializer(serializers.ModelSerializer):
+    """词云使用这个Serializer"""
+
+    class Meta:
+        model = Word
+        fields = ("id", "name")  # todo nums
