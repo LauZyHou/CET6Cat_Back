@@ -21,6 +21,8 @@ class Reading(models.Model):
     content = models.FileField(upload_to="readings/", null=True, blank=True, verbose_name="文章内容")
     source = models.ForeignKey(Site, on_delete=models.CASCADE, verbose_name="来源", related_name="readings")
     add_time = models.DateTimeField(default=datetime.now, verbose_name="添加时间")
+    click_num = models.IntegerField(default=0, verbose_name="点击量")
+    hot_value = models.IntegerField(default=0, verbose_name="热度指数")
 
     class Meta:
         verbose_name = "文章"

@@ -27,9 +27,9 @@ from xadmin.plugins import xversion
 from CET6Cat.settings import MEDIA_ROOT
 # from goods.views_base import GoodsListView
 from goods.views import GoodsViewSet
-from posts.views import PostViewSet
-from readings.views import ReadingViewSet
-from essays.views import EssayViewSet
+from posts.views import PostViewSet, HotPostViewSet
+from readings.views import ReadingViewSet, HotReadingViewSet
+from essays.views import EssayViewSet, HotEssayViewSet
 from videos.views import VideoViewSet, HotVideoViewSet
 from users.views import SmsCodeViewset, UserViewset, UserMsgViewSet, PunchViewSet
 from favorites.views import MyWatchViewSet, WatchMeViewSet
@@ -62,6 +62,9 @@ router.register(r'words', WordsViewSet, base_name="words")
 router.register(r'punch', PunchViewSet, base_name="punch")
 router.register(r'wordcloud', WordCloudViewSet, base_name="wordcloud")
 router.register(r'hotvideo', HotVideoViewSet, base_name="hotvideo")
+router.register(r'hotessay', HotEssayViewSet, base_name="hotessay")
+router.register(r'hotpost', HotPostViewSet, base_name="hotpost")
+router.register(r'hotreading', HotReadingViewSet, base_name="hotreading")
 
 urlpatterns = [
     path('', include(router.urls)),

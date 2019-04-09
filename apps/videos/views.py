@@ -43,7 +43,7 @@ class HotVideoViewSet(mixins.ListModelMixin,
     serializer_class = VideoSerializer
 
     def list(self, request, *args, **kwargs):
-        """获取首页展示的视频列表"""
+        """获取热门视频列表"""
         queryset = self.filter_queryset(self.get_queryset())
 
         page = self.paginate_queryset(queryset)

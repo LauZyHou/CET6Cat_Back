@@ -6,6 +6,7 @@ from rest_framework import viewsets
 from rest_framework.pagination import PageNumberPagination
 from rest_framework import filters
 from django_filters.rest_framework import DjangoFilterBackend
+from rest_framework.response import Response
 
 from posts.models import Post
 from posts.serializers import PostSerializer, PostDetailSerializer, PostAddSerializer
@@ -53,3 +54,23 @@ class PostViewSet(mixins.ListModelMixin,
         # 不论传来的用户id是多少,这个帖子必须是当前登录用户发的,防止伪造请求
         request.data["uper"] = request.user.id
         return super().create(request, args, kwargs)
+
+
+class HotPostViewSet(mixins.ListModelMixin,
+                     viewsets.GenericViewSet):
+    """热门帖子"""
+    serializer_class = PostSerializer
+    queryset = Post.objects.all().order_by("hot_value")
+
+    def list(self, request, *args, **kwargs):
+        """获取热门帖子列表"""
+        queryset = self.filter_queryset(self.get_queryset())
+
+        page = self.paginate_queryset(queryset)
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
+
+        serializer = self.get_serializer(queryset, many=True)
+        # 至多返回8条
+        return Response(serializer.data[:8])
