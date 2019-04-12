@@ -6,6 +6,7 @@ from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.response import Response
 
 from videos.models import Video
+from favorites.models import FavVideo
 from videos.serializers import VideoSerializer, VideoDetailSerializer
 
 
@@ -35,9 +36,27 @@ class VideoViewSet(mixins.ListModelMixin,
         else:
             return VideoDetailSerializer
 
+    def list(self, request, *args, **kwargs):
+        """获取视频列表"""
+        return super().list(request, args, kwargs)
+
+    def retrieve(self, request, *args, **kwargs):
+        """获取视频详情"""
+        instance = self.get_object()
+        serializer = self.get_serializer(instance)
+        # 如果用户登录了,额外添加用户是否收藏该视频(用户没登录时,使用前端默认提供的false)
+        # 注意,这里不能用self.request.user是否为None判断,因为即使没登录它也是一个AnonymousUser对象
+        if self.request.user.id is not None:
+            find_fav = FavVideo.objects.filter(uper=self.request.user.id, base=kwargs['pk']).count()
+            # 没法直接写入非列表形式的serializer.data,这里转dict再加入
+            res_dict = dict(serializer.data)
+            res_dict["isFaved"] = find_fav > 0  # 实际上这里非0即1
+            return Response(res_dict)
+        return Response(serializer.data)
+
 
 class HotVideoViewSet(mixins.ListModelMixin,
-                       viewsets.GenericViewSet):
+                      viewsets.GenericViewSet):
     """首页展示的视频"""
     queryset = Video.objects.all().order_by("hot_value")
     serializer_class = VideoSerializer

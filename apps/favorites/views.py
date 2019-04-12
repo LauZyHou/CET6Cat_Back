@@ -129,10 +129,11 @@ class FavPostViewSet(mixins.CreateModelMixin,
 
     def destroy(self, request, *args, **kwargs):
         """
-        删除：我收藏的帖子
+        删除：我收藏的帖子(传入的是帖子的id,而不是在收藏表中的id)
         注意文档中的DELETE方法的接口测试起来有问题，可以用Postman测试
         """
-        instance = self.get_object()
+        # instance = self.get_object()
+        instance = FavPost.objects.filter(uper=self.request.user.id, base=kwargs['pk'])
         self.perform_destroy(instance)
         return Response({"detail": "删除成功"}, status=status.HTTP_204_NO_CONTENT)
 
@@ -177,10 +178,11 @@ class FavVideoViewSet(mixins.ListModelMixin,
 
     def destroy(self, request, *args, **kwargs):
         """
-        删除：我收藏的视频
+        删除：我收藏的视频(传入的是视频的id,而不是在收藏表中的id)
         注意文档中的DELETE方法的接口测试起来有问题，可以用Postman测试
         """
-        instance = self.get_object()
+        # instance = self.get_object()
+        instance = FavVideo.objects.filter(uper=self.request.user.id, base=kwargs['pk'])
         self.perform_destroy(instance)
         return Response({"detail": "删除成功"}, status=status.HTTP_204_NO_CONTENT)
 
@@ -225,10 +227,11 @@ class FavReadingViewSet(mixins.ListModelMixin,
 
     def destroy(self, request, *args, **kwargs):
         """
-        删除：我收藏的文章
+        删除：我收藏的文章(传入的是文章的id,而不是在收藏表中的id)
         注意文档中的DELETE方法的接口测试起来有问题，可以用Postman测试
         """
-        instance = self.get_object()
+        # instance = self.get_object()
+        instance = FavReading.objects.filter(uper=self.request.user.id, base=kwargs['pk'])
         self.perform_destroy(instance)
         return Response({"detail": "删除成功"}, status=status.HTTP_204_NO_CONTENT)
 
@@ -273,10 +276,11 @@ class FavEssayViewSet(mixins.ListModelMixin,
 
     def destroy(self, request, *args, **kwargs):
         """
-        删除：我收藏的作文
+        删除：我收藏的作文(传入的是作文的id,而不是在收藏表中的id)
         注意文档中的DELETE方法的接口测试起来有问题，可以用Postman测试
         """
-        instance = self.get_object()
+        # instance = self.get_object()
+        instance = FavEssay.objects.filter(uper=self.request.user.id, base=kwargs['pk'])
         self.perform_destroy(instance)
         return Response({"detail": "删除成功"}, status=status.HTTP_204_NO_CONTENT)
 
