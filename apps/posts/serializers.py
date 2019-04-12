@@ -54,3 +54,11 @@ class PostAddSerializer(serializers.ModelSerializer):
     class Meta:
         model = Post
         fields = "__all__"
+
+
+class HotPostSerializer(serializers.ModelSerializer):
+    """热门帖子list用这个Serializer"""
+
+    class Meta:
+        model = Post
+        fields = ("id", "name", "category", "add_time", "uper", "hot_value")

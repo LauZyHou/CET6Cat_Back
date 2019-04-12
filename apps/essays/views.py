@@ -6,7 +6,7 @@ from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.response import Response
 
 from essays.models import Essay
-from essays.serializers import EssaySerializer, EssayDetailSerializer
+from essays.serializers import EssaySerializer, EssayDetailSerializer, HotEssaySerializer
 from favorites.models import FavEssay
 
 
@@ -58,7 +58,7 @@ class EssayViewSet(mixins.ListModelMixin,
 class HotEssayViewSet(mixins.ListModelMixin,
                       viewsets.GenericViewSet):
     """热门作文"""
-    serializer_class = EssaySerializer
+    serializer_class = HotEssaySerializer
     queryset = Essay.objects.all().order_by("hot_value")
 
     def list(self, request, *args, **kwargs):

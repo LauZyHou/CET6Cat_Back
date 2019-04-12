@@ -6,7 +6,7 @@ from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.response import Response
 
 from readings.models import Reading
-from readings.serializers import ReadingSerializer, ReadingDetailSerializer
+from readings.serializers import ReadingSerializer, ReadingDetailSerializer, HotReadingSerializer
 from favorites.models import FavReading
 
 
@@ -58,7 +58,7 @@ class ReadingViewSet(mixins.ListModelMixin,
 class HotReadingViewSet(mixins.ListModelMixin,
                         viewsets.GenericViewSet):
     """热门文章"""
-    serializer_class = ReadingSerializer
+    serializer_class = HotReadingSerializer
     queryset = Reading.objects.all().order_by("hot_value")
 
     def list(self, request, *args, **kwargs):

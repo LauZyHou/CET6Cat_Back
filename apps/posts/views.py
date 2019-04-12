@@ -9,7 +9,7 @@ from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.response import Response
 
 from posts.models import Post
-from posts.serializers import PostSerializer, PostDetailSerializer, PostAddSerializer
+from posts.serializers import PostSerializer, PostDetailSerializer, PostAddSerializer, HotPostSerializer
 from favorites.models import FavPost
 
 
@@ -78,7 +78,7 @@ class PostViewSet(mixins.ListModelMixin,
 class HotPostViewSet(mixins.ListModelMixin,
                      viewsets.GenericViewSet):
     """热门帖子"""
-    serializer_class = PostSerializer
+    serializer_class = HotPostSerializer
     queryset = Post.objects.all().order_by("hot_value")
 
     def list(self, request, *args, **kwargs):

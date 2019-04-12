@@ -18,3 +18,11 @@ class EssayDetailSerializer(serializers.ModelSerializer):
     class Meta:
         model = Essay
         fields = "__all__"
+
+
+class HotEssaySerializer(serializers.ModelSerializer):
+    """热门作文list用这个Serializer"""
+
+    class Meta:
+        model = Essay
+        fields = ("id", "name", "add_time", "hot_value")

@@ -22,3 +22,11 @@ class ReadingDetailSerializer(serializers.ModelSerializer):
     class Meta:
         model = Reading
         fields = "__all__"
+
+
+class HotReadingSerializer(serializers.ModelSerializer):
+    """热门文章list用这个Serializer"""
+
+    class Meta:
+        model = Reading
+        fields = ("id", "name", "add_time", "hot_value")
