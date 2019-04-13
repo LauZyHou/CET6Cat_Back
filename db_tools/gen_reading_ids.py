@@ -8,6 +8,7 @@ import re
 from bs4 import BeautifulSoup
 import time
 import random
+import json
 
 """
 http://www.enread.com/essays/list_1.html
@@ -19,10 +20,10 @@ FILE_STORAGE = "./reading_list"
 
 headers = {
     'User-Agent': 'Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/45.0.2454.93 Safari/537.36',
-    # 'Cookie': 'srcurl=687474703a2f2f7777772e656e726561642e636f6d2f6573736179732f3130363736352e68746d6c; PHPSESSID=jg8klv0im6l3h521ae8kakhcp7; bdshare_firstime=1555119695040; Hm_lvt_8e0a0ac35ad5727d6e32afe2a02616e9=1555119695; __51cke__=; Hm_lpvt_8e0a0ac35ad5727d6e32afe2a02616e9=1555120274; __tins__1636281=%7B%22sid%22%3A%201555119695506%2C%20%22vd%22%3A%203%2C%20%22expires%22%3A%201555122074380%7D; __51laig__=3; yunsuo_session_verify=28500dbd09d2fb191e59abf222e654dd; security_session_mid_verify=a7a08bcb36730dd0e356f7496a9415a1',
-    'Referer': 'http://www.enread.com/essays/106765.html?security_verify_data=313336362c373638',
-    'Upgrade-Insecure-Requests': '1',
-    'Connection': 'keep - alive'
+    # 'Cookie': 'srcurl=687474703a2f2f7777772e656e726561642e636f6d2f6573736179732f3130363736352e68746d6c; PHPSESSID=jg8klv0im6l3h521ae8kakhcp7; bdshare_firstime=1555119695040; Hm_lvt_8e0a0ac35ad5727d6e32afe2a02616e9=1555119695; __51cke__=; Hm_lpvt_8e0a0ac35ad5727d6e32afe2a02616e9=1555120274; __tins__1636281=%7B%22sid%22%3A%201555119695506%2C%20%22vd%22%3A%203%2C%20%22expires%22%3A%201555122074380%7D; __51laig__=3; security_session_mid_verify=a7a08bcb36730dd0e356f7496a9415a1; yunsuo_session_verify=28500dbd09d2fb191e59abf222e654dd',
+    # 'Referer': 'http://www.enread.com/essays/106765.html?security_verify_data=313336362c373638',
+    # 'Upgrade-Insecure-Requests': '1',
+    # 'Connection': 'keep - alive'
 }
 proxies = {
     'https:': 'https://112.85.128.211:9999'
@@ -32,17 +33,47 @@ proxies = {
 url = "http://www.enread.com/essays/list_"
 page = 1
 
-max_cnt = 4  # 一个页面的最大尝试次数
+max_cnt = 3  # 一个页面的最大尝试次数
 a_lst = None  # 存获取到的a标签列表
 cookies = None
 
 while (not a_lst) and max_cnt > 0:
     response = requests.get(url + str(page) + ".html", headers=headers, proxies=proxies, cookies=cookies)
-    cookies = requests.utils.dict_from_cookiejar(response.cookies)
     soup = BeautifulSoup(response.text, 'lxml')
-    a_lst = soup.select('.node-list > .title > h2 > a')
+    # a_lst = soup.select('div.node-list > div.title > h2 > a')
+    a_lst = soup.select(
+        'body > div > div.main > table > tbody > tr > td.left > div > div > div.list > div > div.title > h2 > a')
+
     max_cnt -= 1
     time.sleep(random.uniform(0.5, 1.5))
+
+    """
+    cookies = requests.utils.dict_from_cookiejar(response.cookies)
+    # print(cookies)
+    # print(response.headers)
+    print(response)
+    for k in response.headers:
+        if k == 'Set-Cookie':
+            headers['Cookie'] = response.headers[k]
+            # cookies = response.headers[k]
+        else:
+            headers[k] = response.headers[k]
+    print(headers)
+    """
+
+    """
+    if 'Set-Cookie' in response.headers:
+        # 取出yunsuo_session_verify
+        ysv = response.headers['Set-Cookie'].split("; ")[0]
+        print(ysv)
+        # 替换掉Cookie中旧的yunsuo_session_verify
+        cookie_lst = headers['Cookie'].split("; ")[0:-1]
+        cookie_lst.append(ysv)
+        headers['Cookie'] = "; ".join(cookie_lst)
+    # print(response.headers)
+    """
+    cookies = requests.utils.dict_from_cookiejar(response.cookies)
+
 if (not a_lst) or len(a_lst) == 0:
     print("获取失败")
 else:

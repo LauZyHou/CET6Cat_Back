@@ -34,7 +34,7 @@ from videos.views import VideoViewSet, HotVideoViewSet
 from users.views import SmsCodeViewset, UserViewset, UserMsgViewSet, PunchViewSet
 from favorites.views import MyWatchViewSet, WatchMeViewSet
 from favorites.views import FavPostViewSet, FavVideoViewSet, FavReadingViewSet, FavEssayViewSet
-from others.views import BannerViewSet
+from others.views import BannerViewSet, GlobalSearchViewSet
 from words.views import WordsViewSet, WordCloudViewSet
 
 # XAdmin:model自动注册
@@ -65,6 +65,7 @@ router.register(r'hotvideo', HotVideoViewSet, base_name="hotvideo")
 router.register(r'hotessay', HotEssayViewSet, base_name="hotessay")
 router.register(r'hotpost', HotPostViewSet, base_name="hotpost")
 router.register(r'hotreading', HotReadingViewSet, base_name="hotreading")
+router.register(r'globalsearch', GlobalSearchViewSet, base_name="globalsearch")
 
 urlpatterns = [
     path('', include(router.urls)),
