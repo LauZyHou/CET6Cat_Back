@@ -101,6 +101,8 @@ class ReplyViewSet(mixins.CreateModelMixin,
                    viewsets.GenericViewSet):
     """回帖:创建"""
     serializer_class = ReplyDetailSerializer
+    authentication_classes = (JSONWebTokenAuthentication, authentication.SessionAuthentication)
+    permission_classes = (permissions.IsAuthenticated,)
 
     def create(self, request, *args, **kwargs):
         """创建回帖"""
