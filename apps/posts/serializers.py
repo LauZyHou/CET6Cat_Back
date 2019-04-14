@@ -62,3 +62,11 @@ class HotPostSerializer(serializers.ModelSerializer):
     class Meta:
         model = Post
         fields = ("id", "name", "category", "add_time", "uper", "hot_value")
+
+
+class ReplyDetailSerializer(serializers.ModelSerializer):
+    """用于创建回帖的Serializer"""
+
+    class Meta:
+        model = Reply
+        fields = "__all__"

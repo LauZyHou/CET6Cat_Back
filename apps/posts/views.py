@@ -8,8 +8,9 @@ from rest_framework import filters
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.response import Response
 
-from posts.models import Post
-from posts.serializers import PostSerializer, PostDetailSerializer, PostAddSerializer, HotPostSerializer
+from posts.models import Post, Reply
+from posts.serializers import PostSerializer, PostDetailSerializer, \
+    PostAddSerializer, HotPostSerializer, ReplyDetailSerializer
 from favorites.models import FavPost
 
 
@@ -51,7 +52,8 @@ class PostViewSet(mixins.ListModelMixin,
 
     def create(self, request, *args, **kwargs):
         """发帖"""
-        request.data["add_time"] = datetime.datetime.now()
+        # 不需要指定时间,创建模型时自动就用default了
+        # request.data["add_time"] = datetime.datetime.now()
         # 不论传来的用户id是多少,这个帖子必须是当前登录用户发的,防止伪造请求
         request.data["uper"] = request.user.id
         return super().create(request, args, kwargs)
@@ -93,3 +95,15 @@ class HotPostViewSet(mixins.ListModelMixin,
         serializer = self.get_serializer(queryset, many=True)
         # 至多返回8条
         return Response(serializer.data[:8])
+
+
+class ReplyViewSet(mixins.CreateModelMixin,
+                   viewsets.GenericViewSet):
+    """回帖:创建"""
+    serializer_class = ReplyDetailSerializer
+
+    def create(self, request, *args, **kwargs):
+        """创建回帖"""
+        # 不论传来的用户id是多少,这一楼必须是当前登录用户回的,防止伪造请求
+        request.data["uper"] = request.user.id
+        return super().create(request, args, kwargs)

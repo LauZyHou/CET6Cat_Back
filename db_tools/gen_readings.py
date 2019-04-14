@@ -28,7 +28,7 @@ www.enread.com
 # 请求头和代理池,请求不到了就更新一下Cookie和Referer和代理
 headers = {
     'User-Agent': 'Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/45.0.2454.93 Safari/537.36',
-    'Cookie': 'Hm_lvt_8e0a0ac35ad5727d6e32afe2a02616e9=1555125825,1555139354; __51cke__=; yunsuo_session_verify=47caaea7006b66b3027c74b4aff09465; srcurl=687474703a2f2f7777772e656e726561642e636f6d2f6573736179732f6c6973745f322e68746d6c; security_session_mid_verify=0fb499be8d029a761e051487fdd708f1; Hm_lpvt_8e0a0ac35ad5727d6e32afe2a02616e9=1555140416; __tins__1636281=%7B%22sid%22%3A%201555139354228%2C%20%22vd%22%3A%206%2C%20%22expires%22%3A%201555142215975%7D; __51laig__=6',
+    'Cookie': 'yunsuo_session_verify=47caaea7006b66b3027c74b4aff09465; security_session_mid_verify=0fb499be8d029a761e051487fdd708f1; bdshare_firstime=1555141583186; Hm_lvt_8e0a0ac35ad5727d6e32afe2a02616e9=1555125825,1555139354,1555159765; __51cke__=; Hm_lpvt_8e0a0ac35ad5727d6e32afe2a02616e9=1555159775; __tins__1636281=%7B%22sid%22%3A%201555159765267%2C%20%22vd%22%3A%203%2C%20%22expires%22%3A%201555161574622%7D; __51laig__=3',
     'Referer': 'http://www.enread.com/essays/index.html',
     # 'Upgrade-Insecure-Requests': '1',
     # 'Connection': 'keep - alive'
@@ -51,7 +51,7 @@ with open(FILE_STORAGE, 'r') as f:
 fail = []
 
 for index, eid in enumerate(eids):
-    if index <= 12:  # 记录上次爬到哪一篇
+    if index <= 34:  # 记录上次爬到哪一篇
         continue
     url = "http://www.enread.com/essays/" + eid + ".html"
     article = head = None

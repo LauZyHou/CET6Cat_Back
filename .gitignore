@@ -129,6 +129,9 @@ media/readings/*
 media/essays/*
 media/banner/*
 
+# 实验性质的文件不add
+db_tools/*_test.py
+
 # 保留含占位文件的目录
 !.gitkeep
 !__init__.py
