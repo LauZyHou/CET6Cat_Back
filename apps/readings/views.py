@@ -12,7 +12,7 @@ from favorites.models import FavReading
 
 class ReadingPagination(PageNumberPagination):
     """文章分页"""
-    page_size = 3
+    page_size = 7
     page_size_query_param = 'page_size'
     page_query_param = 'page'
     max_page_size = 100
@@ -44,6 +44,9 @@ class ReadingViewSet(mixins.ListModelMixin,
         """获取文章详情"""
         instance = self.get_object()
         serializer = self.get_serializer(instance)
+        # 访问该资源时,该资源热度+1.fixme 改用redis每+10再写入数据库
+        instance.hot_value += 1
+        instance.save()
         # 如果用户登录了,额外添加用户是否收藏该文章(用户没登录时,使用前端默认提供的false)
         # 注意,这里不能用self.request.user是否为None判断,因为即使没登录它也是一个AnonymousUser对象
         if self.request.user.id is not None:
@@ -59,7 +62,7 @@ class HotReadingViewSet(mixins.ListModelMixin,
                         viewsets.GenericViewSet):
     """热门文章"""
     serializer_class = HotReadingSerializer
-    queryset = Reading.objects.all().order_by("hot_value")
+    queryset = Reading.objects.all().order_by("-hot_value")
 
     def list(self, request, *args, **kwargs):
         """获取热门文章列表"""

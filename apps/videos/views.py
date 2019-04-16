@@ -44,7 +44,10 @@ class VideoViewSet(mixins.ListModelMixin,
         """获取视频详情"""
         instance = self.get_object()
         serializer = self.get_serializer(instance)
-        # 如果用户登录了,额外添加用户是否收藏该视频(用户没登录时,使用前端默认提供的false)
+        # 访问该资源时,该资源热度+1.fixme 改用redis每+10再写入数据库
+        instance.hot_value += 1
+        instance.save()
+        # 如果用户登录了,额外添加字段:用户是否收藏该视频(用户没登录时,使用前端默认提供的false,故不添加此字段)
         # 注意,这里不能用self.request.user是否为None判断,因为即使没登录它也是一个AnonymousUser对象
         if self.request.user.id is not None:
             find_fav = FavVideo.objects.filter(uper=self.request.user.id, base=kwargs['pk']).count()
@@ -58,7 +61,7 @@ class VideoViewSet(mixins.ListModelMixin,
 class HotVideoViewSet(mixins.ListModelMixin,
                       viewsets.GenericViewSet):
     """首页展示的视频"""
-    queryset = Video.objects.all().order_by("hot_value")
+    queryset = Video.objects.all().order_by("-hot_value")
     serializer_class = VideoSerializer
 
     def list(self, request, *args, **kwargs):

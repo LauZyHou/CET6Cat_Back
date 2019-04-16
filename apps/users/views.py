@@ -232,7 +232,7 @@ class PunchViewSet(mixins.RetrieveModelMixin,
             conti_punch += 1
         # 相隔更多的天数,则打卡中断
         else:
-            conti_punch = 0
+            conti_punch = 1
         # 将要更新的信息(连续打卡天数,最后打卡日期)
         request.data["conti_punch"] = conti_punch
         request.data["last_punch"] = now.date()
