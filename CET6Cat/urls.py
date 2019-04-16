@@ -35,7 +35,7 @@ from users.views import SmsCodeViewset, UserViewset, UserMsgViewSet, PunchViewSe
 from favorites.views import MyWatchViewSet, WatchMeViewSet
 from favorites.views import FavPostViewSet, FavVideoViewSet, FavReadingViewSet, FavEssayViewSet
 from others.views import BannerViewSet, GlobalSearchViewSet
-from words.views import WordsViewSet, WordCloudViewSet
+from words.views import WordsViewSet, WordCloudViewSet, WordTrainViewSet
 
 # XAdmin:model自动注册
 xadmin.autodiscover()
@@ -67,6 +67,7 @@ router.register(r'hotpost', HotPostViewSet, base_name="hotpost")
 router.register(r'hotreading', HotReadingViewSet, base_name="hotreading")
 router.register(r'globalsearch', GlobalSearchViewSet, base_name="globalsearch")
 router.register(r'reply', ReplyViewSet, base_name="reply")
+router.register(r'wordtrain', WordTrainViewSet, base_name="wordtrain")
 
 urlpatterns = [
     path('', include(router.urls)),

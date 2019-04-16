@@ -5,7 +5,7 @@ from rest_framework import mixins
 from rest_framework import viewsets
 from rest_framework.response import Response
 
-from words.serializers import WordSerializer, WordCloudSerializer
+from words.serializers import WordSerializer, WordCloudSerializer, WordTrainSerializer
 from words.models import Word
 
 
@@ -39,15 +39,35 @@ class WordCloudViewSet(mixins.ListModelMixin,
     def list(self, request, *args, **kwargs):
         """获取词云单词"""
         queryset = self.filter_queryset(self.get_queryset())
-
         page = self.paginate_queryset(queryset)
         if page is not None:
             serializer = self.get_serializer(page, many=True)
             return self.get_paginated_response(serializer.data)
-
         serializer = self.get_serializer(queryset, many=True)
         # fixme 这里暂时用这种方式添加value指数
         for k in serializer.data:
             k["value"] = random.randint(1, 300)
             del k["id"]
         return Response(serializer.data)
+
+
+class WordTrainViewSet(mixins.ListModelMixin,
+                       viewsets.GenericViewSet):
+    """专项训练->单词测验"""
+    serializer_class = WordTrainSerializer
+    # 从1~1060中随机取40个数得到id列表,取id在这个列表中的那些单词
+    queryset = Word.objects.filter(id__in=random.sample(range(1, 1060), 40))
+
+    def list(self, request, *args, **kwargs):
+        """组卷并返回"""
+        queryset = self.filter_queryset(self.get_queryset())
+        page = self.paginate_queryset(queryset)
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
+        serializer = self.get_serializer(queryset, many=True)
+        # 生成前端要求的卷子格式(四个一组放在check里,随机带一个正确项)并返回
+        res = [{'correct': random.randint(0, 3), 'check': []} for i in range(10)]
+        for i, k in enumerate(serializer.data):
+            res[i // 4]['check'].append(k)
+        return Response(res)

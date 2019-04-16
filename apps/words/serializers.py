@@ -17,3 +17,11 @@ class WordCloudSerializer(serializers.ModelSerializer):
     class Meta:
         model = Word
         fields = ("id", "name")  # todo nums
+
+
+class WordTrainSerializer(serializers.ModelSerializer):
+    """专项训练->单词测验->组卷用这个Serializer"""
+
+    class Meta:
+        model = Word
+        fields = ("name", "explain")
