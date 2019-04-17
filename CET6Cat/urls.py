@@ -34,7 +34,7 @@ from videos.views import VideoViewSet, HotVideoViewSet
 from users.views import SmsCodeViewset, UserViewset, UserMsgViewSet, PunchViewSet
 from favorites.views import MyWatchViewSet, WatchMeViewSet
 from favorites.views import FavPostViewSet, FavVideoViewSet, FavReadingViewSet, FavEssayViewSet
-from others.views import BannerViewSet, GlobalSearchViewSet
+from others.views import BannerViewSet, GlobalSearchViewSet, AudioViewSet
 from words.views import WordsViewSet, WordCloudViewSet, WordTrainViewSet
 
 # XAdmin:model自动注册
@@ -68,6 +68,7 @@ router.register(r'hotreading', HotReadingViewSet, base_name="hotreading")
 router.register(r'globalsearch', GlobalSearchViewSet, base_name="globalsearch")
 router.register(r'reply', ReplyViewSet, base_name="reply")
 router.register(r'wordtrain', WordTrainViewSet, base_name="wordtrain")
+router.register(r'audios', AudioViewSet, base_name="audios")
 
 urlpatterns = [
     path('', include(router.urls)),
