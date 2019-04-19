@@ -1,14 +1,14 @@
 from rest_framework import viewsets, mixins, permissions, authentication
 from rest_framework.response import Response
 
-from others.models import Banner, Audio
+from others.models import Banner, Audio, Translate
 from others.serializers import BannerSerializer
 from users.models import UserProfile
 from readings.models import Reading
 from videos.models import Video
 from posts.models import Post
 from essays.models import Essay
-from others.serializers import AudioSerializer, AudioDetailSerializer
+from others.serializers import AudioSerializer, AudioDetailSerializer, TranslateSerializer, TranslateDetailSerializer
 from rest_framework_jwt.authentication import JSONWebTokenAuthentication
 
 
@@ -75,4 +75,26 @@ class AudioViewSet(mixins.ListModelMixin,
 
     def retrieve(self, request, *args, **kwargs):
         """听力资源详细内容"""
+        return super().retrieve(request, args, kwargs)
+
+
+class TranslateViewSet(mixins.ListModelMixin,
+                       mixins.RetrieveModelMixin,
+                       viewsets.GenericViewSet):
+    """翻译list/retrieve"""
+    queryset = Translate.objects.all()
+    authentication_classes = (JSONWebTokenAuthentication, authentication.SessionAuthentication)
+    permission_classes = (permissions.IsAuthenticated,)
+
+    def get_serializer_class(self):
+        if self.action == 'list':
+            return TranslateSerializer
+        return TranslateDetailSerializer
+
+    def list(self, request, *args, **kwargs):
+        """翻译资源列表"""
+        return super().list(request, args, kwargs)
+
+    def retrieve(self, request, *args, **kwargs):
+        """翻译资源详细内容"""
         return super().retrieve(request, args, kwargs)

@@ -27,12 +27,27 @@ class Audio(models.Model):
     content = models.FileField(upload_to="audios/", verbose_name="听力媒体文件")
     exam = models.FileField(upload_to="audios_txt/", verbose_name="题面文件")
     answer = models.FileField(upload_to="audios_txt/", verbose_name="答案文件")
-    count = models.IntegerField(default=25,verbose_name="题目数量")
+    count = models.IntegerField(default=25, verbose_name="题目数量")
     add_time = models.DateTimeField(default=datetime.now, verbose_name="添加时间")
 
     class Meta:
         verbose_name = "听力资源"
         verbose_name_plural = "听力资源们"
+
+    def __str__(self):
+        return self.name
+
+
+class Translate(models.Model):
+    """翻译资源"""
+    name = models.CharField(max_length=30, verbose_name="名称")
+    exam = models.FileField(upload_to="translate/", verbose_name="题面文件")
+    answer = models.FileField(upload_to="translate/", verbose_name="答案文件")
+    add_time = models.DateTimeField(default=datetime.now, verbose_name="添加时间")
+
+    class Meta:
+        verbose_name = "翻译资源"
+        verbose_name_plural = "翻译资源们"
 
     def __str__(self):
         return self.name
