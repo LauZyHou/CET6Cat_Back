@@ -140,7 +140,17 @@ class UserViewset(mixins.CreateModelMixin,
 
     def retrieve(self, request, *args, **kwargs):
         """获取本用户信息(需身份验证,id无论提供多少,仅返回本用户的信息)"""
-        return super().retrieve(request, args, kwargs)
+        instance = self.get_object()
+        serializer = self.get_serializer(instance)
+        # 获取该用户关注的用户数,以及该用户被多少用户关注(粉丝数)
+        follow_num = Watch.objects.filter(uper=instance.id).count()
+        follower_num = Watch.objects.filter(base=instance.id).count()
+        res = {}
+        for k in serializer.data:
+            res[k] = serializer.data[k]
+        res["follow_num"] = follow_num
+        res["follower_num"] = follower_num
+        return Response(res)
 
     def update(self, request, *args, **kwargs):
         """更新本用户信息(需身份验证,id无论提供多少,仅更新本用户的信息)"""
@@ -171,7 +181,7 @@ class UserMsgViewSet(mixins.RetrieveModelMixin,
         """获取用户的简要信息"""
         instance = self.get_object()
         serializer = self.get_serializer(instance)
-        # 获取该用户关注的用户数,以及该用户被多少用户关注
+        # 获取该用户关注的用户数,以及该用户被多少用户关注(粉丝数)
         follow_num = Watch.objects.filter(uper=instance.id).count()
         follower_num = Watch.objects.filter(base=instance.id).count()
         # 计算发帖数

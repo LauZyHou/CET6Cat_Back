@@ -130,6 +130,7 @@ media/essays/*
 media/banner/*
 media/audios/*
 media/audios_txt/*
+media/translate/*
 
 # 实验性质的文件不add
 db_tools/*_test.py

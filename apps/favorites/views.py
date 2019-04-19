@@ -28,6 +28,7 @@ class FavPagination(PageNumberPagination):
 class MyWatchViewSet(mixins.CreateModelMixin,
                      mixins.DestroyModelMixin,
                      mixins.ListModelMixin,
+                     mixins.RetrieveModelMixin,
                      viewsets.GenericViewSet):
     """
     我关注的人 create,destroy,list时向此view请求
@@ -39,12 +40,17 @@ class MyWatchViewSet(mixins.CreateModelMixin,
 
     def get_serializer_class(self):
         """动态获取序列化类"""
-        if self.action == 'list':
+        if self.action == 'list' or self.action == 'retrieve':
             return MyWatchDetailSerializer
         return MyWatchSerializer
 
     def get_queryset(self):
-        """只返回我关注的条目"""
+        """
+        retrieve时:只返回指定用户关注的条目
+        list或其它时:只返回我关注的条目
+        """
+        if self.action == 'retrieve':
+            return Watch.objects.filter(uper=self.kwargs['pk']).order_by("id")
         return Watch.objects.filter(uper=self.request.user.id).order_by("id")
 
     def create(self, request, *args, **kwargs):
@@ -66,14 +72,33 @@ class MyWatchViewSet(mixins.CreateModelMixin,
 
     def list(self, request, *args, **kwargs):
         """
-        列出全部：我关注的人
+        [废弃]列出全部：当前用户关注的人
         """
         return super().list(request, args, kwargs)
+
+    def retrieve(self, request, *args, **kwargs):
+        """
+        列出全部：指定用户关注的人
+        """
+        # 注意!这里实际仍然用list,只是投机地用了REST风格,当指定id时获取那个用户关注的人!
+        queryset = self.filter_queryset(self.get_queryset())
+        page = self.paginate_queryset(queryset)
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            # 重整结构:取出base字段,作为返回列表的每一项
+            myres = [item['base'] for item in serializer.data]
+            return self.get_paginated_response(myres)
+
+        serializer = self.get_serializer(queryset, many=True)
+        # 重整结构:取出base字段,作为返回列表的每一项
+        myres = [item['base'] for item in serializer.data]
+        return Response(myres)
 
 
 # ---------------------------------[关注我的人]-----------------------------------------
 
 class WatchMeViewSet(mixins.ListModelMixin,
+                     mixins.RetrieveModelMixin,
                      viewsets.GenericViewSet):
     """关注我的人 list时向此view请求"""
     # 用户认证(普通用户从CET6Cat登录用的是JWT,管理员用户从XAdmin登录用的是Session)
@@ -83,14 +108,37 @@ class WatchMeViewSet(mixins.ListModelMixin,
     serializer_class = WatchMeDetailSerializer
 
     def get_queryset(self):
-        """只返回关注我的条目"""
-        return Watch.objects.filter(base=self.request.user.id).order_by("id")
+        """
+        list时:只返回关注我的条目
+        retrieve时:只返回关注指定用户的条目
+        """
+        if self.action == 'list':
+            return Watch.objects.filter(base=self.request.user.id).order_by("id")
+        return Watch.objects.filter(base=self.kwargs['pk']).order_by("id")
 
     def list(self, request, *args, **kwargs):
         """
-        列出全部：关注我的人
+        [废弃]列出全部：关注当前用户的人
         """
         return super().list(request, args, kwargs)
+
+    def retrieve(self, request, *args, **kwargs):
+        """
+        列出全部：关注指定用户的人
+        """
+        # 注意!这里实际仍然用list,只是投机地用了REST风格,当指定id时获取那个用户关注的人!
+        queryset = self.filter_queryset(self.get_queryset())
+        page = self.paginate_queryset(queryset)
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            # 重整结构:取出base字段,作为返回列表的每一项
+            myres = [item['uper'] for item in serializer.data]
+            return self.get_paginated_response(myres)
+
+        serializer = self.get_serializer(queryset, many=True)
+        # 重整结构:取出base字段,作为返回列表的每一项
+        myres = [item['uper'] for item in serializer.data]
+        return Response(myres)
 
 
 # ---------------------------------[我收藏的帖子]-----------------------------------------

@@ -125,7 +125,7 @@ class UserMsgSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = UserProfile
-        fields = ("name", "gender", "college", "brief", "head_img",
+        fields = ("id", "name", "gender", "college", "brief", "head_img",
                   "conti_punch", "words_num", "vip")
 
 

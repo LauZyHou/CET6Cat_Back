@@ -16,7 +16,7 @@ class UserProfileSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = UserProfile
-        fields = ("id", "name", "gender", "head_img")
+        fields = ("id", "name")  # "gender"和"head_img"被去掉了,简洁一些
 
 
 class PostSerializer(serializers.ModelSerializer):
@@ -91,7 +91,8 @@ class MyWatchDetailSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Watch
-        fields = ("id", "base")  # 这里id将被返回给前端,这样在destroy时前端才能提供id
+        # 删除时直接提供要删除的用户id即可,所以这里不再需要返回Watch表的id
+        fields = ("base",)
 
 
 # ---------------------------------[关注我的人]-----------------------------------------
@@ -104,7 +105,7 @@ class WatchMeDetailSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Watch
-        fields = ("id", "uper")  # 前端不会提交DELETE,这个id仅仅用于和"我关注的人"list接口返回结构适应
+        fields = ("uper",)
 
 
 # ---------------------------------[我收藏的帖子]-----------------------------------------
