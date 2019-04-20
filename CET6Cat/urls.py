@@ -31,7 +31,7 @@ from posts.views import PostViewSet, HotPostViewSet, ReplyViewSet
 from readings.views import ReadingViewSet, HotReadingViewSet
 from essays.views import EssayViewSet, HotEssayViewSet
 from videos.views import VideoViewSet, HotVideoViewSet
-from users.views import SmsCodeViewset, UserViewset, UserMsgViewSet, PunchViewSet
+from users.views import SmsCodeViewset, UserViewset, UserMsgViewSet, PunchViewSet, UserHeadImgView
 from favorites.views import MyWatchViewSet, WatchMeViewSet
 from favorites.views import FavPostViewSet, FavVideoViewSet, FavReadingViewSet, FavEssayViewSet
 from others.views import BannerViewSet, GlobalSearchViewSet, AudioViewSet, TranslateViewSet
@@ -70,6 +70,7 @@ router.register(r'reply', ReplyViewSet, base_name="reply")
 router.register(r'wordtrain', WordTrainViewSet, base_name="wordtrain")
 router.register(r'audios', AudioViewSet, base_name="audios")
 router.register(r'translate', TranslateViewSet, base_name="translate")
+# router.register(r'userheadimg', UserHeadImgView.as_view(), base_name="userheadimg")
 
 urlpatterns = [
     path('', include(router.urls)),
@@ -85,4 +86,6 @@ urlpatterns = [
     path('api-token-auth/', views.obtain_auth_token),
     # jwt的token认证,现在改用这个而不用上面那个drf自带的了
     path('login/', obtain_jwt_token),
+    # 上传用户头像
+    path('userheadimg/', UserHeadImgView.as_view())
 ]

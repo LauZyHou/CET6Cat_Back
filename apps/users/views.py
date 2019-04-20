@@ -8,8 +8,9 @@ from rest_framework_jwt.authentication import JSONWebTokenAuthentication
 # 用于生成payload然后生成token
 from rest_framework_jwt.serializers import jwt_payload_handler, jwt_encode_handler
 from rest_framework.response import Response
-from rest_framework import mixins, permissions, authentication
+from rest_framework import mixins, permissions, authentication, parsers
 from rest_framework import viewsets, status
+from rest_framework.views import APIView
 
 from utils.yunpian import YunPian
 from users.models import VerifyCode, UserProfile
@@ -18,6 +19,7 @@ from posts.models import Post
 from users.serializers import SmsSerializer, UserRegSerializer, \
     UserDetailSerializer, UserMsgSerializer, PunchSerializer, GroupSerializer
 from CET6Cat.privacy import YUNPIAN_KEY
+from CET6Cat.settings import BASE_DIR
 
 
 class CustomBackend(ModelBackend):
@@ -247,3 +249,34 @@ class PunchViewSet(mixins.RetrieveModelMixin,
         request.data["conti_punch"] = conti_punch
         request.data["last_punch"] = now.date()
         return super().update(request, args, kwargs)
+
+
+class UserHeadImgView(APIView):
+    """上传用户头像"""
+    authentication_classes = (JSONWebTokenAuthentication, authentication.SessionAuthentication)
+    permission_classes = (permissions.IsAuthenticated,)
+    parser_classes = (parsers.MultiPartParser,)  # 解析multipart/form-data
+
+    def post(self, request):
+        """上传用户头像"""
+        # 先判断一下传来的图片的格式是不是jpg,png,jpeg
+        suffix = str(request.data['file']).split('.')[-1]
+        if not (suffix == 'jpg' or suffix == 'png' or suffix == 'jpeg'):
+            return Response({'msg': "图片扩展名不符合要求"}, status.HTTP_403_FORBIDDEN)
+        # 获取上传来的图片文件<class 'django.core.files.uploadedfile.InMemoryUploadedFile'>
+        up_file = request.data['file']
+        # 获取当前登录用户
+        user = request.user
+        # 用户原来有头像时,将用户原来的头像删除
+        if user.head_img is not None:
+            img = getattr(user, 'head_img', '')
+            # 万一服务器运行一半崩了,这里也不会出现磁盘上头像删了而数据库里记录了头像
+            img.delete(save=True)
+        # 一律用用户id作为头像文件名,后面接上和上传头像相同的扩展名
+        user.head_img = 'user_head/' + str(request.user.id) + '.' + suffix
+        user.save()
+        user_file_path = BASE_DIR + '/media/' + str(user.head_img)
+        with open(user_file_path, 'wb+') as f:
+            for chunk in up_file.chunks():
+                f.write(chunk)
+        return Response({'head_img': str(user.head_img)}, status.HTTP_201_CREATED)
