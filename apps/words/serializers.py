@@ -24,4 +24,4 @@ class WordTrainSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Word
-        fields = ("name", "explain")
+        fields = ("id", "name", "explain")

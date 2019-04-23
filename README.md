@@ -12,6 +12,13 @@ conda env create -f environment.yml
 
 ### 配置数据库
 创建MySQL数据库，并将相关信息配置。数据库使用utf8编码，且选择第一种排序方式。
+
+创建MongoDB数据库并建立相关的Collection，打开mongo命令行并执行：
+```
+use cet6cat
+db.createCollection("fault_words")
+exit
+```
 ### 运行Task指令
 ``` bash
 python manage.py makemigrations
