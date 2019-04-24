@@ -56,6 +56,7 @@ class WordCloudViewSet(mixins.ListModelMixin,
 
 class WordTrainViewSet(mixins.ListModelMixin,
                        mixins.CreateModelMixin,
+                       mixins.RetrieveModelMixin,
                        viewsets.GenericViewSet):
     """专项训练->单词测验"""
     serializer_class = WordTrainSerializer
@@ -127,5 +128,20 @@ class WordTrainViewSet(mixins.ListModelMixin,
                 idx += 1
                 no_repeat.add(db_fw[i])
             CET6CatDB.fault_words.update({'uid': uid}, {"$set": {'fault_words': fw}})
-        # print(CET6CatDB.fault_words.find_one({'uid': uid}))
+        print(CET6CatDB.fault_words.find_one({'uid': uid}))
         return Response({'ok': '收到'})
+
+    def retrieve(self, request, *args, **kwargs):
+        """获取用户的错误词汇(0~MAX_WORDS_NUM个)"""
+        # 当前用户id
+        uid = request.user.id
+        # 当前用户在MongoDB中的文档
+        doc = CET6CatDB.fault_words.find_one({'uid': uid})
+        if not doc:
+            return Response([])
+        # 数据库中的错误单词
+        db_fw = doc['fault_words']
+        ret_lst = [{'name': Word.objects.get(id=item).name, 'value': random.randint(100, 400)} for item in db_fw if
+                   item is not None]
+        print(ret_lst)
+        return Response(ret_lst)

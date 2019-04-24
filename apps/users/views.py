@@ -229,12 +229,17 @@ class PunchViewSet(mixins.RetrieveModelMixin,
 
     def update(self, request, *args, **kwargs):
         """用户打卡,id随便传入,背到的单词数需要前台提供"""
+        now = datetime.datetime.now()  # <class 'datetime.datetime'>
         # 获取之前的连续打卡次数
         conti_punch = request.user.conti_punch
         # 计算和上次打卡的时间差
         last = request.user.last_punch  # <class 'datetime.datetime'>
+        # [bug解决]用户第一次使用时,last_punch为None
+        if last is None:
+            request.data["conti_punch"] = 1
+            request.data["last_punch"] = now.date()
+            return super().update(request, args, kwargs)
         last = datetime.datetime(last.year, last.month, last.day)  # <class 'datetime.datetime'>
-        now = datetime.datetime.now()  # <class 'datetime.datetime'>
         days = (now - last).days
         # 同一天反复打卡,只更新打卡时间(实际上因为存的是date,打卡时间也不会更新)
         if days == 0:
