@@ -5,11 +5,19 @@ from users.models import UserProfile
 
 
 class UperSerializer(serializers.ModelSerializer):
-    """用户Serializer,用于展示帖子中可见的用户视图"""
+    """用户Serializer,用于展示帖子详情中可见的用户视图"""
 
     class Meta:
         model = UserProfile
-        fields = ("id", "username", "gender", "head_img")
+        fields = ("id", "name", "gender", "head_img")
+
+
+class Uper2NameSerializer(serializers.ModelSerializer):
+    """Uper转其Name字段,用于帖子list"""
+
+    class Meta:
+        model = UserProfile
+        fields = ("name",)
 
 
 class ReplySerializer(serializers.ModelSerializer):
@@ -23,12 +31,24 @@ class ReplySerializer(serializers.ModelSerializer):
         fields = "__all__"
 
 
+class SimpleReplySerializer(serializers.ModelSerializer):
+    """极简的回帖Serializer,用于帖子list"""
+
+    # 仅用户昵称
+    uper = Uper2NameSerializer()
+
+    class Meta:
+        model = Reply
+        # [重大改动]此处优化性能,仅仅返回uper字段(uper也只有name)和添加时间(用于展示最后修改时间)
+        fields = ("uper", "add_time")
+
+
 class PostSerializer(serializers.ModelSerializer):
     """帖子list用这个Serializer"""
 
     # 带上它自己的回帖,注意在Models中定义related_name="replies"
-    replies = ReplySerializer(many=True)
-    uper = UperSerializer()
+    replies = SimpleReplySerializer(many=True)
+    uper = Uper2NameSerializer()
 
     # list接口不带content
     class Meta:

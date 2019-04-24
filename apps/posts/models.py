@@ -19,6 +19,12 @@ class Post(models.Model):
     add_time = models.DateTimeField(default=datetime.now, verbose_name="发帖时间")
     click_num = models.IntegerField(default=0, verbose_name="点击量")
     hot_value = models.IntegerField(default=0, verbose_name="热度指数")
+    # todo 重构 新增以下两个字段,以方便实现list页展示和排序(按last_reply_time)
+    """
+    last_reply_user = models.ForeignKey(UserProfile, on_delete=models.SET_NULL, null=True, blank=True,
+                                        verbose_name="最后回帖人")
+    last_reply_time = models.DateField(default=datetime.now, verbose_name="最后回帖时间")
+    """
 
     class Meta:
         verbose_name = "帖子"
