@@ -1,5 +1,11 @@
 # CET6Cat_Back
 CET6Cat英语六级辅导网后端，Django REST framework。
+
+![Anaconda](https://img.shields.io/badge/Anaconda-4.6.12-brightgreen.svg)
+![MySQL](https://img.shields.io/badge/MySQL-5.7.21-blue.svg)
+![MongoDB](https://img.shields.io/badge/MongoDB-4.0.0-green.svg)
+![Redis](https://img.shields.io/badge/Redis-3.2.100-red.svg)
+
 ## 前端项目地址
 [CET6Cat_Front](https://github.com/LauZyHou/CET6Cat_Front)
 ## 项目构建
@@ -43,3 +49,24 @@ python manage.py createsuperuser
 注意，不要重复运行，不然数据库表里的单词就越来越多了（我没有做联合unique约束）。
 
 如果重复运行了怎么办？先把`words_word`表删掉，然后删除表`django_migrations`中生成`words_word`表的那项记录，然后在Task中重新`migrate`就生成了空表，然后再运行上面那个脚本一次。
+## 项目运行
+启动MySQL服务：
+```
+net start MySQL Server
+```
+
+启动MongoDB服务：
+```
+net start MongoDB Server
+```
+
+启动Redis服务：
+```
+redis-server
+```
+
+从PyCharm配置运行本项目，Environment Variables：
+```
+PYTHONUNBUFFERED=1
+DJANGO_SETTINGS_MODULE=CET6Cat.settings
+```

@@ -8,6 +8,8 @@ from rest_framework.response import Response
 from essays.models import Essay
 from essays.serializers import EssaySerializer, EssayDetailSerializer, HotEssaySerializer
 from favorites.models import FavEssay
+from db_tools.redis_pool import RedisPool
+from CET6Cat.settings import REDIS_THRESHOLD
 
 
 class EssayPagination(PageNumberPagination):
@@ -44,9 +46,19 @@ class EssayViewSet(mixins.ListModelMixin,
         """获取作文详情"""
         instance = self.get_object()
         serializer = self.get_serializer(instance)
-        # 访问该资源时,该资源热度+1.fixme 改用redis每+10再写入数据库
-        instance.hot_value += 1
-        instance.save()
+        # 访问该资源时,该资源热度+1(用Redis做优化)
+        r = RedisPool.get_connection()
+        r_name = 'essay_' + kwargs['pk']
+        r_val = r.get(r_name)
+        if r_val is None:
+            r_val = 1
+        elif int(r_val) == REDIS_THRESHOLD - 1:
+            instance.hot_value += REDIS_THRESHOLD
+            instance.save()
+            r_val = 0
+        else:
+            r_val = int(r_val) + 1
+        r.set(r_name, r_val)
         # 如果用户登录了,额外添加用户是否收藏该作文(用户没登录时,使用前端默认提供的false)
         # 注意,这里不能用self.request.user是否为None判断,因为即使没登录它也是一个AnonymousUser对象
         if self.request.user.id is not None:

@@ -38,6 +38,7 @@ dependencies:
   - pymongo=3.7.2=py36h6538335_0
   - python=3.6.6=he025d50_0
   - pytz=2018.9=py_0
+  - redis-py=3.2.1=py_0
   - setuptools=40.8.0=py36_0
   - six=1.12.0=py36_1000
   - soupsieve=1.9=py36_0
