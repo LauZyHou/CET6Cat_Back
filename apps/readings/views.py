@@ -8,6 +8,7 @@ from rest_framework.response import Response
 from readings.models import Reading
 from readings.serializers import ReadingSerializer, ReadingDetailSerializer, HotReadingSerializer
 from favorites.models import FavReading
+from db_tools.mongo_pool import StudyNumDump
 from db_tools.redis_pool import RedisPool
 from CET6Cat.settings import REDIS_THRESHOLD
 
@@ -59,10 +60,17 @@ class ReadingViewSet(mixins.ListModelMixin,
         else:
             r_val = int(r_val) + 1
         r.set(r_name, r_val)
-        # 如果用户登录了,额外添加用户是否收藏该文章(用户没登录时,使用前端默认提供的false)
+
+        # 用户的id,可用于判定是否登录,以及做相应操作
         # 注意,这里不能用self.request.user是否为None判断,因为即使没登录它也是一个AnonymousUser对象
-        if self.request.user.id is not None:
-            find_fav = FavReading.objects.filter(uper=self.request.user.id, base=kwargs['pk']).count()
+        uid = self.request.user.id
+
+        # 记录本周此类资源学习次数
+        StudyNumDump.dump('reading', uid)
+
+        # 如果用户登录了,额外添加用户是否收藏该文章(用户没登录时,使用前端默认提供的false)
+        if uid is not None:
+            find_fav = FavReading.objects.filter(uper=uid, base=kwargs['pk']).count()
             # 没法直接写入非列表形式的serializer.data,这里转dict再加入
             res_dict = dict(serializer.data)
             res_dict["isFaved"] = find_fav > 0  # 实际上这里非0即1

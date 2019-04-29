@@ -31,7 +31,7 @@ from posts.views import PostViewSet, HotPostViewSet, ReplyViewSet
 from readings.views import ReadingViewSet, HotReadingViewSet
 from essays.views import EssayViewSet, HotEssayViewSet
 from videos.views import VideoViewSet, HotVideoViewSet
-from users.views import SmsCodeViewset, UserViewset, UserMsgViewSet, PunchViewSet, UserHeadImgView
+from users.views import SmsCodeViewset, UserViewset, UserMsgViewSet, PunchViewSet, UserHeadImgView, UserStudyView
 from favorites.views import MyWatchViewSet, WatchMeViewSet
 from favorites.views import FavPostViewSet, FavVideoViewSet, FavReadingViewSet, FavEssayViewSet
 from others.views import BannerViewSet, GlobalSearchViewSet, AudioViewSet, TranslateViewSet
@@ -87,5 +87,7 @@ urlpatterns = [
     # jwt的token认证,现在改用这个而不用上面那个drf自带的了
     path('login/', obtain_jwt_token),
     # 上传用户头像
-    path('userheadimg/', UserHeadImgView.as_view())
+    path('userheadimg/', UserHeadImgView.as_view()),
+    # 获取学习情况
+    path('userstudy/', UserStudyView.as_view())
 ]

@@ -1,5 +1,6 @@
 from random import choice
 import datetime
+import time
 
 from django.contrib.auth.backends import ModelBackend
 from django.db.models import Q
@@ -20,6 +21,7 @@ from users.serializers import SmsSerializer, UserRegSerializer, \
     UserDetailSerializer, UserMsgSerializer, PunchSerializer, GroupSerializer
 from CET6Cat.privacy import YUNPIAN_KEY
 from CET6Cat.settings import BASE_DIR
+from db_tools.mongo_pool import CET6CatDB
 
 
 class CustomBackend(ModelBackend):
@@ -285,3 +287,29 @@ class UserHeadImgView(APIView):
             for chunk in up_file.chunks():
                 f.write(chunk)
         return Response({'head_img': str(user.head_img)}, status.HTTP_201_CREATED)
+
+
+class UserStudyView(APIView):
+    """用户学习情况"""
+    authentication_classes = (JSONWebTokenAuthentication, authentication.SessionAuthentication)
+    permission_classes = (permissions.IsAuthenticated,)
+
+    def get(self, request):
+        """用户获取自己的学习情况"""
+        uid = request.user.id
+        doc = CET6CatDB.study_num.find_one({'uid': uid})
+        # doc为空时立即在数据库中创建
+        zero_lst = [0 for i in range(6)]
+        now_week = int(time.time()) // 604800
+        if not doc:
+            CET6CatDB.study_num.insert({
+                'uid': uid,
+                'week': now_week,
+                'video': zero_lst,
+                'forum': zero_lst,
+                'reading': zero_lst,
+                'essay': zero_lst})
+            # 写完要再查出来
+            doc = CET6CatDB.study_num.find_one({'uid': uid})
+        del doc["_id"]
+        return Response(doc, status=status.HTTP_200_OK)
