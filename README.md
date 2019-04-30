@@ -24,6 +24,7 @@ conda env create -f environment.yml
 use cet6cat
 db.createCollection("fault_words")
 db.createCollection("study_num")
+db.createCollection("translate")
 exit
 ```
 ### 运行Task指令

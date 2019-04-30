@@ -87,8 +87,9 @@ class PostViewSet(mixins.ListModelMixin,
         # 注意,这里不能用self.request.user是否为None判断,因为即使没登录它也是一个AnonymousUser对象
         uid = self.request.user.id
 
-        # 记录本周此类资源学习次数
-        StudyNumDump.dump('forum', uid)
+        # 如果用户登录了,本周其访问此资源应+1
+        if uid is not None:
+            StudyNumDump.dump('forum', uid)
 
         # 如果用户登录了,额外添加用户是否收藏该帖子(用户没登录时,使用前端默认提供的false)
         if uid is not None:

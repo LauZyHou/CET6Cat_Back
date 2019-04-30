@@ -31,7 +31,8 @@ from posts.views import PostViewSet, HotPostViewSet, ReplyViewSet
 from readings.views import ReadingViewSet, HotReadingViewSet
 from essays.views import EssayViewSet, HotEssayViewSet
 from videos.views import VideoViewSet, HotVideoViewSet
-from users.views import SmsCodeViewset, UserViewset, UserMsgViewSet, PunchViewSet, UserHeadImgView, UserStudyView
+from users.views import SmsCodeViewset, UserViewset, UserMsgViewSet, \
+    PunchViewSet, UserHeadImgView, UserStudyView, UserTranslateViewSet
 from favorites.views import MyWatchViewSet, WatchMeViewSet
 from favorites.views import FavPostViewSet, FavVideoViewSet, FavReadingViewSet, FavEssayViewSet
 from others.views import BannerViewSet, GlobalSearchViewSet, AudioViewSet, TranslateViewSet
@@ -71,6 +72,7 @@ router.register(r'wordtrain', WordTrainViewSet, base_name="wordtrain")
 router.register(r'audios', AudioViewSet, base_name="audios")
 router.register(r'translate', TranslateViewSet, base_name="translate")
 # router.register(r'userheadimg', UserHeadImgView.as_view(), base_name="userheadimg")
+router.register(r'usertranslate', UserTranslateViewSet, base_name="usertranslate")
 
 urlpatterns = [
     path('', include(router.urls)),

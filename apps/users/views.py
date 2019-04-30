@@ -313,3 +313,35 @@ class UserStudyView(APIView):
             doc = CET6CatDB.study_num.find_one({'uid': uid})
         del doc["_id"]
         return Response(doc, status=status.HTTP_200_OK)
+
+
+class UserTranslateViewSet(mixins.CreateModelMixin,
+                           mixins.RetrieveModelMixin,
+                           viewsets.GenericViewSet):
+    """用户的翻译记录"""
+    authentication_classes = (JSONWebTokenAuthentication, authentication.SessionAuthentication)
+    permission_classes = (permissions.IsAuthenticated,)
+
+    def create(self, request, *args, **kwargs):
+        """用户保存翻译记录"""
+        # 用户id
+        uid = request.user.id
+        # 用户传来的content和翻译资源主键
+        content = request.data["content"]
+        tid = request.data["tid"]
+        # 保存或更新记录
+        doc = CET6CatDB.translate.find_one({'uid': uid, 'tid': tid})
+        if doc is None:
+            CET6CatDB.translate.insert({'uid': uid, 'tid': tid, 'content': content})
+        else:
+            CET6CatDB.translate.update({'uid': uid, 'tid': tid}, {"$set": {'content': content}})
+        return Response({'ok': "已保存"}, status=status.HTTP_201_CREATED)
+
+    def retrieve(self, request, *args, **kwargs):
+        """用户获取翻译记录"""
+        # 用户id
+        uid = request.user.id
+        # 要获取的翻译资源主键
+        tid = kwargs['pk']
+        doc = CET6CatDB.translate.find_one({'uid': uid, 'tid': int(tid)})
+        return Response({'content': None if doc is None else doc['content']})

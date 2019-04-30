@@ -11,6 +11,7 @@ from django.dispatch import receiver
 from rest_framework.authtoken.models import Token
 
 from django.contrib.auth import get_user_model
+from db_tools.mongo_pool import CET6CatDB
 
 User = get_user_model()
 
@@ -29,7 +30,7 @@ def create_user_password(sender, instance=None, created=False, **kwargs):
 
 @receiver(pre_delete, sender=User)
 def delete_user_head(sender, instance=None, created=False, **kwargs):
-    """User对象删除时触发"""
+    """User对象删除时触发,将其头像文件从服务器移除"""
     img = getattr(instance, 'head_img', '')  # <class 'django.db.models.fields.files.ImageFieldFile'>
     if not img:
         return
@@ -39,3 +40,12 @@ def delete_user_head(sender, instance=None, created=False, **kwargs):
     # fname = os.path.join(settings.MEDIA_ROOT, files)
     # if os.path.isfile(fname):
     #     os.remove(fname)
+
+
+@receiver(pre_delete, sender=User)
+def delete_user_mongo(sender, instance=None, created=False, **kwargs):
+    """User对象删除时触发,将其在MongoDB中的记录也删除"""
+    id = getattr(instance, 'id', '')
+    CET6CatDB.fault_words.remove({'uid': id})
+    CET6CatDB.study_num.remove({'uid': id})
+    CET6CatDB.translate.remove({'uid': id})  # remove删除所有的记录,delete只删除一个

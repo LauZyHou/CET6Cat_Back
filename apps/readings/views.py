@@ -1,5 +1,6 @@
 from rest_framework import mixins
-from rest_framework import viewsets
+from rest_framework import viewsets, authentication
+from rest_framework_jwt.authentication import JSONWebTokenAuthentication
 from rest_framework.pagination import PageNumberPagination
 from rest_framework import filters
 from django_filters.rest_framework import DjangoFilterBackend
@@ -31,6 +32,7 @@ class ReadingViewSet(mixins.ListModelMixin,
     queryset = Reading.objects.all()
     search_fields = ('name',)
     ordering = ('id',)
+    authentication_classes = (JSONWebTokenAuthentication, authentication.SessionAuthentication)
 
     def get_serializer_class(self):
         """list和retrieve的Serializer分开"""
@@ -65,8 +67,9 @@ class ReadingViewSet(mixins.ListModelMixin,
         # 注意,这里不能用self.request.user是否为None判断,因为即使没登录它也是一个AnonymousUser对象
         uid = self.request.user.id
 
-        # 记录本周此类资源学习次数
-        StudyNumDump.dump('reading', uid)
+        # 如果用户登录了,本周其访问此资源应+1
+        if uid is not None:
+            StudyNumDump.dump('reading', uid)
 
         # 如果用户登录了,额外添加用户是否收藏该文章(用户没登录时,使用前端默认提供的false)
         if uid is not None:
