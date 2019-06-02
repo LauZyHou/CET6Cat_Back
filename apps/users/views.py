@@ -116,12 +116,12 @@ class UserViewset(mixins.CreateModelMixin,
         # Serializer中做验证并可能抛出异常,出错时将自动返回相应的HTTP状态码
         serializer.is_valid(raise_exception=True)
         user = self.perform_create(serializer)
-
+        print("用户保存化好了")
         re_dict = serializer.data
         payload = jwt_payload_handler(user)
         re_dict["token"] = jwt_encode_handler(payload)
         re_dict["name"] = user.name if user.name else user.username
-
+        print("返回的字典做好了")
         headers = self.get_success_headers(serializer.data)
         return Response(re_dict, status=status.HTTP_201_CREATED, headers=headers)
 
@@ -321,6 +321,9 @@ class UserTranslateViewSet(mixins.CreateModelMixin,
     """用户的翻译记录"""
     authentication_classes = (JSONWebTokenAuthentication, authentication.SessionAuthentication)
     permission_classes = (permissions.IsAuthenticated,)
+    # [bugfix]这里随便是什么,但不能是None或者不写,否则:
+    # should either include a `serializer_class` attribute, or override the `get_serializer_class()`
+    serializer_class = UserMsgSerializer
 
     def create(self, request, *args, **kwargs):
         """用户保存翻译记录"""
