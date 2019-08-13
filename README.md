@@ -9,6 +9,9 @@ CET6Cat英语六级辅导网后端，Django REST framework。
 ## 前端项目地址
 [CET6Cat_Front](https://github.com/LauZyHou/CET6Cat_Front)
 
+## 演示视频
+[CET6Cat演示视频-bilibili](https://www.bilibili.com/video/av63516010/)
+
 ## 后端运行展示
 ### API Root
 ![](./README_PIC/1.png)
